@@ -597,6 +597,10 @@
     const SUPABASE_KEY = 'sb_publishable_4EIcEDUkSQM-M48b6ym-mg_l00fiETk';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // ── Stripe ─────────────────────────────────────────────────────
+    // TEST mode — cambiar a live link cuando se active la cuenta real
+    window.STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_28E4gsaPpd9wgk27GI8N200';
+
     // Estado global del usuario
     window.appUser = { session: null, profile: null, hasPaid: false };
 
