@@ -684,7 +684,7 @@
                   Mi progreso
                 </button>
                 ${!hasPaid ? `
-                <button class="profile-menu-item" onclick="showPaywall('Desbloquea el acceso completo y aprende francés sin límites.');closeProfileMenu()" role="menuitem" style="color:#16A34A;">
+                <button class="profile-menu-item" onclick="startCheckout();closeProfileMenu()" role="menuitem" style="color:#16A34A;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
                   Actualizar a Premium
                 </button>` : ''}
@@ -736,6 +736,27 @@
     function canAccessVerbGroup(grupo) {
       if (window.appUser.hasPaid) return true;
       return grupo === 'groupe1';               // Solo -ER gratis
+    }
+
+    async function startCheckout() {
+      // Necesita sesión activa
+      if (!window.appUser.session) {
+        await loginWithGoogle();
+        return;
+      }
+      const userId = window.appUser.session.user.id;
+      const email = window.appUser.session.user.email || '';
+      // STRIPE_PAYMENT_LINK se reemplaza con el link real de Stripe
+      // El link debe tener ?client_reference_id={userId} para identificar al usuario
+      const STRIPE_PAYMENT_LINK = window.STRIPE_PAYMENT_LINK || '';
+      if (!STRIPE_PAYMENT_LINK) {
+        alert('⚙️ Pago próximamente disponible. ¡Gracias por tu interés!');
+        return;
+      }
+      const url = new URL(STRIPE_PAYMENT_LINK);
+      url.searchParams.set('client_reference_id', userId);
+      url.searchParams.set('prefilled_email', email);
+      window.location.href = url.toString();
     }
 
     function showPaywall(msg) {
@@ -9587,8 +9608,8 @@ init();
         <div style="font-size:2rem;font-weight:700;color:#4CAF50;">$29.99 USD</div>
         <div style="font-size:0.75rem;color:#4CAF50;">🎉 Precio de lanzamiento — pago único</div>
       </div>
-      <button onclick="loginWithGoogle()" style="width:100%;padding:0.8rem;background:#4285F4;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:0.75rem;">
-        🔑 Iniciar sesión con Google
+      <button onclick="startCheckout()" style="width:100%;padding:0.8rem;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:0.75rem;">
+        💳 Comprar acceso completo — $29.99 USD
       </button>
       <button onclick="document.getElementById('paywall-modal').style.display='none'" style="width:100%;padding:0.7rem;background:transparent;color:#888;border:1px solid #ddd;border-radius:8px;font-size:0.9rem;cursor:pointer;">
         Continuar en versión gratuita
