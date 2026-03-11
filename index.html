@@ -563,6 +563,98 @@
     .conj-back-btn:hover{border-color:var(--blue);color:var(--blue);}
 
   </style>
+
+  <!-- Supabase Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ── Supabase init ──────────────────────────────────────────────
+    const SUPABASE_URL = 'https://zyrmayxpstuplwxtkitu.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_4EIcEDUkSQM-M48b6ym-mg_l00fiETk';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Estado global del usuario
+    window.appUser = { session: null, profile: null, hasPaid: false };
+
+    async function initAuth() {
+      const { data: { session } } = await _supabase.auth.getSession();
+      await setUser(session);
+      _supabase.auth.onAuthStateChange(async (_event, session) => {
+        await setUser(session);
+        renderAuthUI();
+      });
+    }
+
+    async function setUser(session) {
+      window.appUser.session = session;
+      if (session) {
+        const { data } = await _supabase
+          .from('user_profiles')
+          .select('has_paid')
+          .eq('id', session.user.id)
+          .single();
+        window.appUser.profile = data;
+        window.appUser.hasPaid = data?.has_paid === true;
+      } else {
+        window.appUser.profile = null;
+        window.appUser.hasPaid = false;
+      }
+    }
+
+    async function loginWithGoogle() {
+      await _supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+    }
+
+    async function logout() {
+      await _supabase.auth.signOut();
+      window.appUser = { session: null, profile: null, hasPaid: false };
+      renderAuthUI();
+    }
+
+    function renderAuthUI() {
+      const btn = document.getElementById('auth-btn');
+      const userInfo = document.getElementById('auth-user-info');
+      if (!btn) return;
+      if (window.appUser.session) {
+        const name = window.appUser.session.user.user_metadata?.full_name ||
+                     window.appUser.session.user.email || 'Usuario';
+        btn.textContent = 'Cerrar sesión';
+        btn.onclick = logout;
+        if (userInfo) userInfo.textContent = '👤 ' + name + (window.appUser.hasPaid ? ' ⭐' : ' (gratis)');
+      } else {
+        btn.textContent = 'Iniciar sesión con Google';
+        btn.onclick = loginWithGoogle;
+        if (userInfo) userInfo.textContent = '';
+      }
+    }
+
+    // Verifica si el usuario puede acceder a contenido premium
+    // nivel: 'A1'|'A2'|'B1'|'B2'|'C1'|'C2', topicIndex: número 0-based dentro del nivel
+    function canAccessTopic(nivel, topicIndex) {
+      if (window.appUser.hasPaid) return true;
+      if (nivel === 'A1') return true;          // A1 gratis completo
+      return topicIndex < 3;                    // Solo 3 temas por nivel gratis
+    }
+
+    // Verifica si puede usar el conjugador para un grupo de verbo
+    // grupo: string como 'groupe1', 'groupe2', 'groupe3', 'ir_irreg', etc.
+    function canAccessVerbGroup(grupo) {
+      if (window.appUser.hasPaid) return true;
+      return grupo === 'groupe1';               // Solo -ER gratis
+    }
+
+    function showPaywall(msg) {
+      const m = document.getElementById('paywall-modal');
+      if (m) {
+        document.getElementById('paywall-msg').textContent = msg || '¡Desbloquea el acceso completo!';
+        m.style.display = 'flex';
+      } else {
+        alert('🔒 ' + (msg || 'Esta función requiere una cuenta de pago.\n\nPrecio de lanzamiento: $29.99 USD (pago único)'));
+      }
+    }
+  </script>
 </head>
 <body>
 <div id="transitionOverlay"></div>
@@ -642,6 +734,12 @@
       <div><div class="topbar-logo-text">Le Pupu <span>Le Guagua</span></div></div>
     </div>
     <div class="topbar-breadcrumb"><span class="active-crumb">Elige tu nivel</span></div>
+    <div id="auth-ui" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+      <span id="auth-user-info" style="font-size:0.8rem;color:#666;"></span>
+      <button id="auth-btn" onclick="loginWithGoogle()" style="padding:0.4rem 0.9rem;background:#4285F4;color:#fff;border:none;border-radius:6px;font-size:0.85rem;cursor:pointer;white-space:nowrap;">
+        Iniciar sesión con Google
+      </button>
+    </div>
   </div>
   <div class="levels-header">
     <h1 class="screen-title">Choisissez votre niveau</h1>
@@ -8835,6 +8933,19 @@ const PRACTICE = {
 function startPractice(topicName) {
   const data = PRACTICE_BANK[topicName];
   if (!data) return;
+
+  // Verificar acceso freemium
+  const nivelActual = data.level;
+  const levelTopics = TEMARIO[nivelActual] || [];
+  const sortedTopics = [...levelTopics].sort((a, b) =>
+    a.t.localeCompare(b.t, 'fr', { sensitivity: 'base' })
+  );
+  const temaIndex = sortedTopics.findIndex(item => item.t === topicName);
+  if (!canAccessTopic(nivelActual, temaIndex)) {
+    showPaywall('Para practicar más de 3 temas por nivel necesitas la versión completa.');
+    return;
+  }
+
   PRACTICE.topicName = topicName;
   PRACTICE.data = data;
   // Shuffle pool and pick first 10 (different every run)
@@ -9156,6 +9267,12 @@ function selectConjGroup(gid) {
 }
 
 function selectConjVerb(vinf) {
+  // Verificar acceso freemium
+  const grupoVerbo = CONJ.groupId;
+  if (!canAccessVerbGroup(grupoVerbo)) {
+    showPaywall('El conjugador completo (verbos -IR, -RE e irregulares) requiere la versión completa.');
+    return;
+  }
   CONJ.verbInf = vinf;
   renderConjugador();
 }
@@ -9370,5 +9487,32 @@ function init() {
 
 init();
 </script>
+
+  <!-- Modal de Paywall -->
+  <div id="paywall-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:2rem;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem;">🔒</div>
+      <h2 style="margin:0 0 0.5rem;color:#1a1a2e;">Contenido Premium</h2>
+      <p id="paywall-msg" style="color:#555;margin-bottom:1.5rem;">Desbloquea acceso completo a todos los niveles, temas y verbos.</p>
+      <div style="background:#f8f9fa;border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+        <div style="font-size:0.8rem;color:#888;text-decoration:line-through;">Precio regular: $50 USD</div>
+        <div style="font-size:2rem;font-weight:700;color:#4CAF50;">$29.99 USD</div>
+        <div style="font-size:0.75rem;color:#4CAF50;">🎉 Precio de lanzamiento — pago único</div>
+      </div>
+      <button onclick="loginWithGoogle()" style="width:100%;padding:0.8rem;background:#4285F4;color:#fff;border:none;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:0.75rem;">
+        🔑 Iniciar sesión con Google
+      </button>
+      <button onclick="document.getElementById('paywall-modal').style.display='none'" style="width:100%;padding:0.7rem;background:transparent;color:#888;border:1px solid #ddd;border-radius:8px;font-size:0.9rem;cursor:pointer;">
+        Continuar en versión gratuita
+      </button>
+    </div>
+  </div>
+
+  <!-- Inicializar auth cuando carga la página -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initAuth().then(() => renderAuthUI());
+    });
+  </script>
 </body>
 </html>
