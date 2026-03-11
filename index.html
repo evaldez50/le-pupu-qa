@@ -63,6 +63,31 @@
     .topbar-logo-text span{color:var(--red);}
     .topbar-back{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:50px;border:2px solid var(--gray-200);background:transparent;font-size:.9rem;font-weight:600;color:var(--gray-600);cursor:pointer;transition:var(--transition);}
     .topbar-back:hover{border-color:var(--blue);color:var(--blue);}
+    /* Auth / Profile dropdown */
+    .auth-avatar-btn{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:50px;border:2px solid transparent;cursor:pointer;background:transparent;transition:all .2s;position:relative;}
+    .auth-avatar-btn:hover{border-color:var(--blue);background:#EFF6FF;}
+    .auth-avatar-img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #4285F4;}
+    .auth-avatar-name{font-size:.82rem;font-weight:700;color:var(--gray-700);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .auth-login-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;background:#4285F4;color:#fff;border:none;border-radius:50px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+    .auth-login-btn:hover{background:#2563EB;transform:scale(1.02);}
+    .auth-login-btn svg{width:16px;height:16px;flex-shrink:0;}
+    /* Profile menu */
+    .profile-menu{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:270px;z-index:9998;overflow:hidden;border:1px solid var(--gray-100);animation:menuFade .15s ease;}
+    @keyframes menuFade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+    .profile-menu-header{padding:16px;background:linear-gradient(135deg,#EFF6FF,#F0FDF4);border-bottom:1px solid var(--gray-100);display:flex;align-items:center;gap:12px;}
+    .profile-menu-avatar{width:50px;height:50px;border-radius:50%;object-fit:cover;border:3px solid #4285F4;flex-shrink:0;}
+    .profile-menu-avatar-fallback{width:50px;height:50px;border-radius:50%;background:#4285F4;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:#fff;flex-shrink:0;}
+    .profile-menu-name{font-weight:800;color:var(--gray-800);font-size:.95rem;line-height:1.2;}
+    .profile-menu-email{font-size:.75rem;color:var(--gray-500);margin:2px 0;}
+    .plan-badge{display:inline-flex;align-items:center;gap:4px;font-size:.68rem;padding:2px 8px;border-radius:20px;font-weight:700;margin-top:3px;}
+    .plan-badge.free{background:#FEF3C7;color:#92400E;}
+    .plan-badge.premium{background:#ECFDF5;color:#065F46;}
+    .profile-menu-body{padding:8px;}
+    .profile-menu-item{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;background:transparent;border-radius:10px;font-size:.88rem;font-weight:600;color:var(--gray-700);cursor:pointer;text-align:left;transition:background .15s;}
+    .profile-menu-item:hover{background:var(--gray-100);}
+    .profile-menu-item.danger{color:#EF4444;}
+    .profile-menu-item.danger:hover{background:#FEF2F2;}
+    .profile-menu-divider{height:1px;background:var(--gray-100);margin:4px 0;}
     .topbar-breadcrumb{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--gray-400);flex:1;}
     .topbar-breadcrumb .crumb{font-weight:600;color:var(--gray-600);}
     .topbar-breadcrumb .active-crumb{color:var(--blue);font-weight:700;}
@@ -614,21 +639,89 @@
     }
 
     function renderAuthUI() {
-      const btn = document.getElementById('auth-btn');
-      const userInfo = document.getElementById('auth-user-info');
-      if (!btn) return;
+      const container = document.getElementById('auth-ui');
+      if (!container) return;
+
       if (window.appUser.session) {
-        const name = window.appUser.session.user.user_metadata?.full_name ||
-                     window.appUser.session.user.email || 'Usuario';
-        btn.textContent = 'Cerrar sesión';
-        btn.onclick = logout;
-        if (userInfo) userInfo.textContent = '👤 ' + name + (window.appUser.hasPaid ? ' ⭐' : ' (gratis)');
+        const user = window.appUser.session.user;
+        const meta = user.user_metadata || {};
+        const name = meta.full_name || meta.name || user.email?.split('@')[0] || 'Usuario';
+        const firstName = name.split(' ')[0];
+        const email = user.email || '';
+        const avatar = meta.avatar_url || meta.picture || '';
+        const hasPaid = window.appUser.hasPaid;
+        const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+
+        container.innerHTML = `
+          <div style="position:relative;">
+            <button class="auth-avatar-btn" onclick="toggleProfileMenu(event)" aria-expanded="false" aria-haspopup="true">
+              ${avatar
+                ? `<img class="auth-avatar-img" src="${avatar}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                   <div style="display:none;width:34px;height:34px;border-radius:50%;background:#4285F4;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.85rem;">${initials}</div>`
+                : `<div style="width:34px;height:34px;border-radius:50%;background:#4285F4;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.85rem;">${initials}</div>`
+              }
+              <span class="auth-avatar-name">${firstName}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="profile-menu" id="profile-menu" style="display:none;" role="menu">
+              <div class="profile-menu-header">
+                ${avatar
+                  ? `<img class="profile-menu-avatar" src="${avatar}" alt="${name}" onerror="this.outerHTML='<div class=profile-menu-avatar-fallback>${initials}</div>'">`
+                  : `<div class="profile-menu-avatar-fallback">${initials}</div>`
+                }
+                <div style="min-width:0;">
+                  <div class="profile-menu-name">${name}</div>
+                  <div class="profile-menu-email">${email}</div>
+                  ${hasPaid
+                    ? `<span class="plan-badge premium">⭐ Premium</span>`
+                    : `<span class="plan-badge free">🆓 Plan gratuito</span>`
+                  }
+                </div>
+              </div>
+              <div class="profile-menu-body">
+                <button class="profile-menu-item" onclick="showScreen('history');closeProfileMenu()" role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                  Mi progreso
+                </button>
+                ${!hasPaid ? `
+                <button class="profile-menu-item" onclick="showPaywall('Desbloquea el acceso completo y aprende francés sin límites.');closeProfileMenu()" role="menuitem" style="color:#16A34A;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                  Actualizar a Premium
+                </button>` : ''}
+                <div class="profile-menu-divider"></div>
+                <button class="profile-menu-item danger" onclick="logout()" role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>`;
       } else {
-        btn.textContent = 'Iniciar sesión con Google';
-        btn.onclick = loginWithGoogle;
-        if (userInfo) userInfo.textContent = '';
+        container.innerHTML = `
+          <button class="auth-login-btn" onclick="loginWithGoogle()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Iniciar sesión con Google
+          </button>`;
       }
     }
+
+    function toggleProfileMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById('profile-menu');
+      if (!menu) return;
+      const isOpen = menu.style.display !== 'none';
+      if (isOpen) { closeProfileMenu(); } else { menu.style.display = 'block'; }
+    }
+
+    function closeProfileMenu() {
+      const menu = document.getElementById('profile-menu');
+      if (menu) menu.style.display = 'none';
+    }
+
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#auth-ui')) closeProfileMenu();
+    });
 
     // Verifica si el usuario puede acceder a contenido premium
     // nivel: 'A1'|'A2'|'B1'|'B2'|'C1'|'C2', topicIndex: número 0-based dentro del nivel
@@ -734,12 +827,7 @@
       <div><div class="topbar-logo-text">Le Pupu <span>Le Guagua</span></div></div>
     </div>
     <div class="topbar-breadcrumb"><span class="active-crumb">Elige tu nivel</span></div>
-    <div id="auth-ui" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-      <span id="auth-user-info" style="font-size:0.8rem;color:#666;"></span>
-      <button id="auth-btn" onclick="loginWithGoogle()" style="padding:0.4rem 0.9rem;background:#4285F4;color:#fff;border:none;border-radius:6px;font-size:0.85rem;cursor:pointer;white-space:nowrap;">
-        Iniciar sesión con Google
-      </button>
-    </div>
+    <div id="auth-ui" style="margin-left:auto;"></div>
   </div>
   <div class="levels-header">
     <h1 class="screen-title">Choisissez votre niveau</h1>
