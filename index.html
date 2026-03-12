@@ -60,7 +60,7 @@
     #transitionOverlay.flash{background:rgba(255,255,255,.45);}
 
     /* ══ TOPBAR ══ */
-    .topbar{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:2px solid var(--gray-100);padding:12px 24px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
+    .topbar{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:2px solid var(--gray-100);padding:12px 165px 12px 24px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm);}
     .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
     .topbar-logo-text{font-size:1.05rem;font-weight:800;color:var(--blue);line-height:1.1;}
     .topbar-logo-text span{color:var(--red);}
@@ -713,9 +713,14 @@
     }
 
     async function logout() {
-      await _supabase.auth.signOut();
-      window.appUser = { session: null, profile: null, hasPaid: false };
-      renderAuthUI();
+      try {
+        closeProfileMenu();
+        await _supabase.auth.signOut();
+        window.appUser = { session: null, profile: null, hasPaid: false };
+        renderAuthUI();
+      } catch(e) {
+        console.error('[Auth] logout error:', e.message);
+      }
     }
 
     function renderAuthUI() {
@@ -9732,7 +9737,8 @@ init();
   <!-- Inicializar auth cuando carga la página -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      initAuth();
+      renderAuthUI(); // Mostrar botón de login de inmediato (sin esperar Supabase)
+      initAuth();     // Luego cargar el estado real de sesión
     });
   </script>
 </body>
