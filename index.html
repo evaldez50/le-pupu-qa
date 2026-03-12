@@ -713,13 +713,17 @@
     }
 
     async function logout() {
+      closeProfileMenu();
+      // Limpiar estado local PRIMERO — UI cambia de inmediato sin esperar Supabase
+      window.appUser = { session: null, profile: null, hasPaid: false };
+      renderAuthUI();
+      // Luego cerrar sesión en Supabase (no bloquea la UI)
       try {
-        closeProfileMenu();
-        await _supabase.auth.signOut();
-        window.appUser = { session: null, profile: null, hasPaid: false };
-        renderAuthUI();
+        const { error } = await _supabase.auth.signOut();
+        if (error) console.error('[Auth] signOut error:', error.message);
+        else console.log('[Auth] signOut OK');
       } catch(e) {
-        console.error('[Auth] logout error:', e.message);
+        console.error('[Auth] signOut exception:', e.message);
       }
     }
 
@@ -854,6 +858,27 @@
       const m = document.getElementById('paywall-modal');
       if (m) {
         document.getElementById('paywall-msg').textContent = msg || '¡Desbloquea el acceso completo!';
+
+        // Ajustar el botón según si el usuario está logueado o no
+        const btn = document.getElementById('paywall-buy-btn');
+        if (btn) {
+          if (window.appUser && window.appUser.session) {
+            // Ya logueado → ir directo al pago
+            btn.textContent = '💳 Comprar acceso completo — $29.99 USD';
+            btn.onclick = function() {
+              document.getElementById('paywall-modal').style.display = 'none';
+              startCheckout();
+            };
+          } else {
+            // No logueado → primero login, luego pago automático
+            btn.textContent = '🔐 Inicia sesión con Google para comprar';
+            btn.onclick = function() {
+              document.getElementById('paywall-modal').style.display = 'none';
+              sessionStorage.setItem('pendingCheckout', 'true');
+              loginWithGoogle();
+            };
+          }
+        }
         m.style.display = 'flex';
       } else {
         alert('🔒 ' + (msg || 'Esta función requiere una cuenta de pago.\n\nPrecio de lanzamiento: $29.99 USD (pago único)'));
@@ -9725,7 +9750,7 @@ init();
         <div style="font-size:2rem;font-weight:700;color:#4CAF50;">$29.99 USD</div>
         <div style="font-size:0.75rem;color:#4CAF50;">🎉 Precio de lanzamiento — pago único</div>
       </div>
-      <button onclick="startCheckout()" style="width:100%;padding:0.8rem;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:0.75rem;">
+      <button id="paywall-buy-btn" onclick="startCheckout()" style="width:100%;padding:0.8rem;background:#16A34A;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:0.75rem;">
         💳 Comprar acceso completo — $29.99 USD
       </button>
       <button onclick="document.getElementById('paywall-modal').style.display='none'" style="width:100%;padding:0.7rem;background:transparent;color:#888;border:1px solid #ddd;border-radius:8px;font-size:0.9rem;cursor:pointer;">
