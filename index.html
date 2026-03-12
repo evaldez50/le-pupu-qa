@@ -605,37 +605,26 @@
     window.appUser = { session: null, profile: null, hasPaid: false };
 
     async function initAuth() {
-      // ─── PATRÓN CORRECTO SUPABASE v2 ──────────────────────────────────────
-      // 1. Registrar el listener PRIMERO para recibir INITIAL_SESSION con la
-      //    sesión existente (usuarios ya autenticados).
-      // 2. Llamar getSession() DESPUÉS para activar el intercambio PKCE si hay
-      //    un ?code= en la URL (OAuth return). createClient() ya habrá limpiado
-      //    la URL, por eso NO usamos window.location para detectar OAuth.
-      // 3. La detección de login genuino usa sessionStorage ('oauthStarted'),
-      //    que se establece en loginWithGoogle() ANTES del redirect y persiste
-      //    a través de la redirección OAuth.
-      // ─────────────────────────────────────────────────────────────────────
+      console.log('[Auth] initAuth start');
 
-      // Paso 1: listener → recibirá INITIAL_SESSION y SIGNED_IN
+      // PASO 1: Registrar listener PRIMERO.
+      // onAuthStateChange dispara INITIAL_SESSION (sesión existente) o
+      // SIGNED_IN (login nuevo). El flag 'oauthStarted' en sessionStorage
+      // distingue un login genuino de una restauración de sesión.
       _supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log('[Auth]', event, '|', session?.user?.email || 'sin sesión');
+        console.log('[Auth] EVENT:', event, '|', session?.user?.email || 'sin sesión');
         await setUser(session);
         renderAuthUI();
 
         if (event === 'SIGNED_IN') {
-          // freshLogin = login real iniciado por el usuario con loginWithGoogle()
-          // El flag sobrevive a la redirección OAuth dentro del mismo tab
           const freshLogin = sessionStorage.getItem('oauthStarted') === 'true';
           sessionStorage.removeItem('oauthStarted');
-          console.log('[Auth] SIGNED_IN freshLogin:', freshLogin,
+          console.log('[Auth] SIGNED_IN | freshLogin:', freshLogin,
                       '| pendingCheckout:', sessionStorage.getItem('pendingCheckout'));
-
           if (freshLogin && sessionStorage.getItem('pendingCheckout') === 'true') {
-            // Había un intento de checkout antes del login → ir a Stripe
             sessionStorage.removeItem('pendingCheckout');
             setTimeout(() => startCheckout(), 300);
           }
-          // Sin checkout pendiente: el usuario ya ve el perfil en la pantalla actual
         }
 
         if (event === 'SIGNED_OUT') {
@@ -643,10 +632,22 @@
         }
       });
 
-      // Paso 2: getSession() activa el intercambio PKCE si la sesión no existe
+      // PASO 2: getSession() dispara el intercambio PKCE si viene de OAuth.
       const { data: { session }, error } = await _supabase.auth.getSession();
-      if (error) console.warn('[Auth] getSession error:', error.message);
-      console.log('[Auth] getSession →', session?.user?.email || 'sin sesión');
+      if (error) console.warn('[Auth] getSession ERROR:', error.message);
+      console.log('[Auth] getSession result:', session?.user?.email || 'sin sesión');
+
+      // PASO 3: Belt-and-suspenders.
+      // Si INITIAL_SESSION disparó con null (timing) pero getSession SÍ tiene sesión,
+      // aplicarla ahora para garantizar que el perfil aparezca.
+      if (session && !window.appUser.session) {
+        console.log('[Auth] applying session from getSession (INITIAL_SESSION was null/slow)');
+        await setUser(session);
+        renderAuthUI();
+      } else if (!session && !window.appUser.session) {
+        // Sin sesión → mostrar botón de login
+        renderAuthUI();
+      }
     }
 
     async function setUser(session) {
