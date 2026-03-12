@@ -605,53 +605,67 @@
     window.appUser = { session: null, profile: null, hasPaid: false };
 
     async function initAuth() {
-      // Detectar si la página cargó desde un callback OAuth real (el code está en la URL)
-      // Esta bandera queda capturada en el closure y NO cambia aunque Supabase limpie la URL
-      const _freshOAuth = window.location.search.includes('code=') ||
-                          window.location.hash.includes('access_token=');
+      // ─── PATRÓN CORRECTO SUPABASE v2 ──────────────────────────────────────
+      // 1. Registrar el listener PRIMERO para recibir INITIAL_SESSION con la
+      //    sesión existente (usuarios ya autenticados).
+      // 2. Llamar getSession() DESPUÉS para activar el intercambio PKCE si hay
+      //    un ?code= en la URL (OAuth return). createClient() ya habrá limpiado
+      //    la URL, por eso NO usamos window.location para detectar OAuth.
+      // 3. La detección de login genuino usa sessionStorage ('oauthStarted'),
+      //    que se establece en loginWithGoogle() ANTES del redirect y persiste
+      //    a través de la redirección OAuth.
+      // ─────────────────────────────────────────────────────────────────────
 
-      // 1. Obtener sesión actual (también intercambia el código OAuth si está en la URL)
-      const { data: { session: initialSession } } = await _supabase.auth.getSession();
-      await setUser(initialSession);
-      renderAuthUI(); // Renderizar perfil / botón de login con el estado real
-
-      // 2. Escuchar cambios futuros de auth
+      // Paso 1: listener → recibirá INITIAL_SESSION y SIGNED_IN
       _supabase.auth.onAuthStateChange(async (event, session) => {
-        // INITIAL_SESSION: ya procesamos la sesión arriba con getSession(); ignorar
-        if (event === 'INITIAL_SESSION') return;
-
+        console.log('[Auth]', event, '|', session?.user?.email || 'sin sesión');
         await setUser(session);
         renderAuthUI();
 
         if (event === 'SIGNED_IN') {
-          // Solo actuar si es un login genuino desde OAuth (no restauración de sesión)
-          if (_freshOAuth) {
-            if (sessionStorage.getItem('pendingCheckout') === 'true') {
-              // Había un intento de checkout → continuar a Stripe
-              sessionStorage.removeItem('pendingCheckout');
-              setTimeout(() => startCheckout(), 300);
-            }
-            // Sin checkout pendiente: el usuario ve el perfil en la pantalla actual
+          // freshLogin = login real iniciado por el usuario con loginWithGoogle()
+          // El flag sobrevive a la redirección OAuth dentro del mismo tab
+          const freshLogin = sessionStorage.getItem('oauthStarted') === 'true';
+          sessionStorage.removeItem('oauthStarted');
+          console.log('[Auth] SIGNED_IN freshLogin:', freshLogin,
+                      '| pendingCheckout:', sessionStorage.getItem('pendingCheckout'));
+
+          if (freshLogin && sessionStorage.getItem('pendingCheckout') === 'true') {
+            // Había un intento de checkout antes del login → ir a Stripe
+            sessionStorage.removeItem('pendingCheckout');
+            setTimeout(() => startCheckout(), 300);
           }
-          // Si _freshOAuth=false: sesión restaurada por otra vía → solo actualizar UI
+          // Sin checkout pendiente: el usuario ya ve el perfil en la pantalla actual
         }
 
         if (event === 'SIGNED_OUT') {
           if (typeof showScreen === 'function') showScreen('levels');
         }
       });
+
+      // Paso 2: getSession() activa el intercambio PKCE si la sesión no existe
+      const { data: { session }, error } = await _supabase.auth.getSession();
+      if (error) console.warn('[Auth] getSession error:', error.message);
+      console.log('[Auth] getSession →', session?.user?.email || 'sin sesión');
     }
 
     async function setUser(session) {
       window.appUser.session = session;
       if (session) {
-        const { data } = await _supabase
-          .from('user_profiles')
-          .select('has_paid')
-          .eq('id', session.user.id)
-          .single();
-        window.appUser.profile = data;
-        window.appUser.hasPaid = data?.has_paid === true;
+        try {
+          const { data, error } = await _supabase
+            .from('user_profiles')
+            .select('has_paid')
+            .eq('id', session.user.id)
+            .single();
+          if (error) console.warn('[Auth] user_profiles query error:', error.message);
+          window.appUser.profile = data || null;
+          window.appUser.hasPaid = data?.has_paid === true;
+        } catch (e) {
+          console.error('[Auth] setUser error:', e.message);
+          window.appUser.profile = null;
+          window.appUser.hasPaid = false;
+        }
       } else {
         window.appUser.profile = null;
         window.appUser.hasPaid = false;
@@ -659,13 +673,19 @@
     }
 
     async function loginWithGoogle() {
-      // Usar URL limpia (origin + pathname) como redirectTo
-      // Evita pasar ?code= u otros params al callback de vuelta
+      // Marcar que hay un login en curso ANTES del redirect OAuth.
+      // sessionStorage sobrevive a redirecciones dentro del mismo tab,
+      // por eso es más confiable que detectar ?code= en la URL después del regreso.
+      sessionStorage.setItem('oauthStarted', 'true');
       const redirectTo = window.location.origin + window.location.pathname;
-      await _supabase.auth.signInWithOAuth({
+      const { error } = await _supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo }
       });
+      if (error) {
+        console.error('[Auth] loginWithGoogle error:', error.message);
+        sessionStorage.removeItem('oauthStarted'); // limpiar si falló antes del redirect
+      }
     }
 
     async function logout() {
