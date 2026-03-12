@@ -607,9 +607,19 @@
     async function initAuth() {
       const { data: { session } } = await _supabase.auth.getSession();
       await setUser(session);
-      _supabase.auth.onAuthStateChange(async (_event, session) => {
+      _supabase.auth.onAuthStateChange(async (event, session) => {
         await setUser(session);
         renderAuthUI();
+        if (event === 'SIGNED_IN') {
+          // Checkout pendiente → ir directo a Stripe tras login
+          if (sessionStorage.getItem('pendingCheckout') === 'true') {
+            sessionStorage.removeItem('pendingCheckout');
+            setTimeout(() => startCheckout(), 400);
+          } else {
+            // Sin checkout pendiente → mostrar pantalla de niveles con el perfil
+            if (typeof showScreen === 'function') showScreen('levels');
+          }
+        }
       });
     }
 
@@ -643,7 +653,7 @@
     }
 
     function renderAuthUI() {
-      const container = document.getElementById('auth-ui');
+      const container = document.getElementById('auth-ui-global') || document.getElementById('auth-ui');
       if (!container) return;
 
       if (window.appUser.session) {
@@ -724,7 +734,7 @@
 
     // Cerrar dropdown al hacer clic fuera
     document.addEventListener('click', function(e) {
-      if (!e.target.closest('#auth-ui')) closeProfileMenu();
+      if (!e.target.closest('#auth-ui-global') && !e.target.closest('#auth-ui')) closeProfileMenu();
     });
 
     // Verifica si el usuario puede acceder a contenido premium
@@ -745,6 +755,7 @@
     async function startCheckout() {
       // Necesita sesión activa
       if (!window.appUser.session) {
+        sessionStorage.setItem('pendingCheckout', 'true');
         await loginWithGoogle();
         return;
       }
@@ -776,6 +787,8 @@
 </head>
 <body>
 <div id="transitionOverlay"></div>
+<!-- Auth UI global: visible en TODAS las pantallas, posición fija -->
+<div id="auth-ui-global" style="position:fixed;top:10px;right:16px;z-index:9997;"></div>
 
 <!-- ═══════ SCREEN: HOME ═══════ -->
 <div id="screen-home" class="screen active">
