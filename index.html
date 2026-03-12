@@ -605,20 +605,39 @@
     window.appUser = { session: null, profile: null, hasPaid: false };
 
     async function initAuth() {
-      const { data: { session } } = await _supabase.auth.getSession();
-      await setUser(session);
+      // Detectar si la página cargó desde un callback OAuth real (el code está en la URL)
+      // Esta bandera queda capturada en el closure y NO cambia aunque Supabase limpie la URL
+      const _freshOAuth = window.location.search.includes('code=') ||
+                          window.location.hash.includes('access_token=');
+
+      // 1. Obtener sesión actual (también intercambia el código OAuth si está en la URL)
+      const { data: { session: initialSession } } = await _supabase.auth.getSession();
+      await setUser(initialSession);
+      renderAuthUI(); // Renderizar perfil / botón de login con el estado real
+
+      // 2. Escuchar cambios futuros de auth
       _supabase.auth.onAuthStateChange(async (event, session) => {
+        // INITIAL_SESSION: ya procesamos la sesión arriba con getSession(); ignorar
+        if (event === 'INITIAL_SESSION') return;
+
         await setUser(session);
         renderAuthUI();
+
         if (event === 'SIGNED_IN') {
-          // Checkout pendiente → ir directo a Stripe tras login
-          if (sessionStorage.getItem('pendingCheckout') === 'true') {
-            sessionStorage.removeItem('pendingCheckout');
-            setTimeout(() => startCheckout(), 400);
-          } else {
-            // Sin checkout pendiente → mostrar pantalla de niveles con el perfil
-            if (typeof showScreen === 'function') showScreen('levels');
+          // Solo actuar si es un login genuino desde OAuth (no restauración de sesión)
+          if (_freshOAuth) {
+            if (sessionStorage.getItem('pendingCheckout') === 'true') {
+              // Había un intento de checkout → continuar a Stripe
+              sessionStorage.removeItem('pendingCheckout');
+              setTimeout(() => startCheckout(), 300);
+            }
+            // Sin checkout pendiente: el usuario ve el perfil en la pantalla actual
           }
+          // Si _freshOAuth=false: sesión restaurada por otra vía → solo actualizar UI
+        }
+
+        if (event === 'SIGNED_OUT') {
+          if (typeof showScreen === 'function') showScreen('levels');
         }
       });
     }
@@ -640,9 +659,12 @@
     }
 
     async function loginWithGoogle() {
+      // Usar URL limpia (origin + pathname) como redirectTo
+      // Evita pasar ?code= u otros params al callback de vuelta
+      const redirectTo = window.location.origin + window.location.pathname;
       await _supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.href }
+        options: { redirectTo }
       });
     }
 
@@ -9637,7 +9659,7 @@ init();
   <!-- Inicializar auth cuando carga la página -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      initAuth().then(() => renderAuthUI());
+      initAuth();
     });
   </script>
 </body>
