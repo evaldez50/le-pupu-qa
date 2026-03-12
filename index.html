@@ -607,6 +607,15 @@
     // Estado global del usuario
     window.appUser = { session: null, profile: null, hasPaid: false };
 
+    // Detectar retorno desde Stripe con pago exitoso
+    (function() {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('payment') === 'success') {
+        history.replaceState({}, '', window.location.pathname + window.location.hash);
+        window._pendingPaymentSuccess = true;
+      }
+    })();
+
     async function initAuth() {
       console.log('[Auth] initAuth start');
 
@@ -652,6 +661,15 @@
       } else if (!session && !window.appUser.session) {
         // Sin sesión → mostrar botón de login
         renderAuthUI();
+      }
+
+      // Si el usuario regresó de Stripe con pago exitoso → re-fetch perfil y mostrar bienvenida
+      if (window._pendingPaymentSuccess && window.appUser.session) {
+        window._pendingPaymentSuccess = false;
+        console.log('[Auth] regreso de Stripe — re-fetching perfil');
+        await setUser(window.appUser.session);
+        renderAuthUI();
+        showPaymentSuccessModal();
       }
     }
 
@@ -820,6 +838,11 @@
       url.searchParams.set('client_reference_id', userId);
       url.searchParams.set('prefilled_email', email);
       window.location.href = url.toString();
+    }
+
+    function showPaymentSuccessModal() {
+      const m = document.getElementById('payment-success-modal');
+      if (m) { m.style.display = 'flex'; if (typeof launchConfetti === 'function') launchConfetti(); }
     }
 
     function showPaywall(msg) {
@@ -9661,6 +9684,30 @@ function init() {
 
 init();
 </script>
+
+  <!-- Modal de Pago Exitoso -->
+  <div id="payment-success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:20px;padding:2.2rem 2rem;max-width:400px;width:92%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+      <div style="font-size:3rem;margin-bottom:0.4rem;">🎉</div>
+      <h2 style="margin:0 0 0.4rem;color:#1a1a2e;font-size:1.4rem;">¡Bienvenido a Premium!</h2>
+      <p style="color:#444;margin-bottom:1.4rem;font-size:0.97rem;line-height:1.5;">
+        Ahora tienes acceso ilimitado a todas las funciones de Le Pupu Le Guagua.
+      </p>
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1.5rem;text-align:left;">
+        <div style="font-weight:700;color:#15803d;margin-bottom:0.6rem;font-size:0.9rem;">✅ Lo que acabas de desbloquear:</div>
+        <ul style="margin:0;padding-left:1.2rem;color:#166534;font-size:0.88rem;line-height:1.8;">
+          <li>Todos los niveles y temas (A1 → C2)</li>
+          <li>Conjugador completo — todos los grupos verbales</li>
+          <li>Práctica libre sin restricciones</li>
+          <li>Acceso de por vida — sin mensualidades</li>
+        </ul>
+      </div>
+      <button onclick="document.getElementById('payment-success-modal').style.display='none'"
+        style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#16A34A,#15803d);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">
+        🚀 Empezar ahora
+      </button>
+    </div>
+  </div>
 
   <!-- Modal de Paywall -->
   <div id="paywall-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
