@@ -70,10 +70,7 @@ serve(async (req: Request) => {
 
   const { error } = await supabase
     .from('user_profiles')
-    .update({
-      has_paid: true,
-      paid_at: new Date().toISOString(),
-    })
+    .update({ has_paid: true })
     .eq('id', userId);
 
   if (error) {

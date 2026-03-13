@@ -635,14 +635,19 @@
         await setUser(session);
         renderAuthUI();
 
-        if (event === 'SIGNED_IN') {
-          const freshLogin = sessionStorage.getItem('oauthStarted') === 'true';
-          sessionStorage.removeItem('oauthStarted');
-          console.log('[Auth] SIGNED_IN | freshLogin:', freshLogin,
-                      '| pendingCheckout:', sessionStorage.getItem('pendingCheckout'));
-          if (freshLogin && sessionStorage.getItem('pendingCheckout') === 'true') {
-            sessionStorage.removeItem('pendingCheckout');
-            setTimeout(() => startCheckout(), 300);
+        // Manejar pendingCheckout en SIGNED_IN Y en INITIAL_SESSION
+        // (Supabase puede resolver el OAuth antes de que se registre el listener,
+        //  en cuyo caso solo llega INITIAL_SESSION y SIGNED_IN nunca se dispara)
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+          if (session) { // Solo si hay sesión activa
+            const freshLogin = sessionStorage.getItem('oauthStarted') === 'true';
+            sessionStorage.removeItem('oauthStarted'); // Consumir flag (evita doble trigger)
+            console.log(`[Auth] ${event} | freshLogin:`, freshLogin,
+                        '| pendingCheckout:', sessionStorage.getItem('pendingCheckout'));
+            if (freshLogin && sessionStorage.getItem('pendingCheckout') === 'true') {
+              sessionStorage.removeItem('pendingCheckout');
+              setTimeout(() => startCheckout(), 300);
+            }
           }
         }
 
