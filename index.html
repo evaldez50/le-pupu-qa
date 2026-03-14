@@ -682,6 +682,22 @@
         await setUser(window.appUser.session);
         renderAuthUI();
         showPaymentSuccessModal();
+        // Polling: el webhook de Stripe puede tardar 1-5 seg en actualizar has_paid
+        // Reintentamos hasta 5 veces con 2 seg de intervalo hasta confirmar
+        if (!window.appUser.hasPaid) {
+          let attempts = 0;
+          const pollPaid = setInterval(async () => {
+            attempts++;
+            console.log('[Auth] polling has_paid, intento', attempts);
+            await setUser(window.appUser.session);
+            renderAuthUI();
+            if (window.appUser.hasPaid || attempts >= 5) {
+              clearInterval(pollPaid);
+              if (window.appUser.hasPaid) console.log('[Auth] ✅ has_paid confirmado');
+              else console.warn('[Auth] ⚠️ has_paid no se actualizó tras 5 intentos');
+            }
+          }, 2000);
+        }
       }
 
       // Si canceló el pago después de registrarse → cerrar sesión (no guardamos registro sin pago)
@@ -701,14 +717,25 @@
       window.appUser.session = session;
       if (session) {
         try {
+          const u = session.user;
+          // Upsert: crea el perfil si no existe (trigger en DB también lo hace,
+          // pero esto garantiza que los datos de Google se guarden correctamente)
+          await _supabase.from('user_profiles').upsert({
+            id: u.id,
+            email: u.email || null,
+            full_name: u.user_metadata?.full_name || u.user_metadata?.name || null,
+            avatar_url: u.user_metadata?.avatar_url || u.user_metadata?.picture || null,
+          }, { onConflict: 'id', ignoreDuplicates: false });
+
           const { data, error } = await _supabase
             .from('user_profiles')
             .select('has_paid')
-            .eq('id', session.user.id)
+            .eq('id', u.id)
             .single();
           if (error) console.warn('[Auth] user_profiles query error:', error.message);
           window.appUser.profile = data || null;
           window.appUser.hasPaid = data?.has_paid === true;
+          console.log('[Auth] setUser hasPaid:', window.appUser.hasPaid);
         } catch (e) {
           console.error('[Auth] setUser error:', e.message);
           window.appUser.profile = null;

@@ -68,13 +68,13 @@ serve(async (req: Request) => {
   // Actualizar has_paid en Supabase usando la service role key (bypassa RLS)
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
+  // UPSERT: crea la fila si no existe, actualiza si ya existe
   const { error } = await supabase
     .from('user_profiles')
-    .update({ has_paid: true })
-    .eq('id', userId);
+    .upsert({ id: userId, has_paid: true }, { onConflict: 'id' });
 
   if (error) {
-    console.error('Supabase update error:', error);
+    console.error('Supabase upsert error:', error);
     return new Response('DB update failed', { status: 500 });
   }
 
