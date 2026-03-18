@@ -629,6 +629,13 @@
 
       _supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('[Auth] EVENT:', event, '|', session?.user?.email || 'sin sesión');
+
+        // Render UI inmediatamente con la sesión (sin esperar consultas DB)
+        window.appUser.session = session;
+        if (!session) { window.appUser.profile = null; window.appUser.hasPaid = false; }
+        renderAuthUI();
+
+        // Luego cargar datos del perfil (hasPaid, etc.)
         await setUser(session);
         renderAuthUI();
 
@@ -642,7 +649,6 @@
             if (freshLogin && loginFromProfile) {
               sessionStorage.removeItem('loginFromProfile');
               if (!window.appUser.hasPaid) {
-                // Recién registrado y sin pago → llevarlo a Stripe con su ID
                 setTimeout(() => startCheckout(), 300);
               }
               // ESCENARIO 3: ya pagó → sólo se loguea, no hace nada extra
@@ -650,16 +656,17 @@
             }
 
             // ESCENARIO 1 (post-pago): Registra cuenta después de haber pagado anónimamente
-            const postPaymentReg = sessionStorage.getItem('postPaymentReg') === 'true';
-            if (freshLogin && postPaymentReg) {
-              sessionStorage.removeItem('postPaymentReg');
+            // Usamos localStorage para sobrevivir redirects de OAuth entre dominios
+            const postPaymentReg = localStorage.getItem('postPaymentReg') === 'true';
+            if (postPaymentReg) {
+              localStorage.removeItem('postPaymentReg');
               await activatePendingPayment(session.user.email);
               renderAuthUI();
               showPaymentSuccessModal();
               return;
             }
 
-            // Flujo legacy (pendingCheckout): por si se usó el botón del perfil "Actualizar a Premium"
+            // Flujo legacy (pendingCheckout)
             if (freshLogin && sessionStorage.getItem('pendingCheckout') === 'true') {
               sessionStorage.removeItem('pendingCheckout');
               setTimeout(() => startCheckout(), 300);
@@ -992,7 +999,7 @@
     function registerAfterPayment() {
       const modal = document.getElementById('post-payment-reg-modal');
       if (modal) modal.style.display = 'none';
-      sessionStorage.setItem('postPaymentReg', 'true');
+      localStorage.setItem('postPaymentReg', 'true');
       loginWithGoogle();
     }
 
