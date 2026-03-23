@@ -977,10 +977,20 @@
     }
 
     async function startPremium() {
-      // Re-verificar hasPaid desde DB antes de cerrar el modal (por si el webhook aún no había llegado)
-      if (!window.appUser.hasPaid && window.appUser.session) {
-        await setUser(window.appUser.session);
+      const btn = document.querySelector('#payment-success-modal button');
+      // Siempre confirmar desde DB antes de cerrar
+      if (window.appUser.session) {
+        if (btn) { btn.textContent = '⏳ Confirmando acceso...'; btn.disabled = true; }
+        let attempts = 0;
+        while (!window.appUser.hasPaid && attempts < 15) {
+          await setUser(window.appUser.session);
+          if (window.appUser.hasPaid) break;
+          await new Promise(r => setTimeout(r, 2000));
+          attempts++;
+        }
       }
+      window.appUser.hasPaid = true; // Garantizar estado local
+      renderAuthUI();
       document.getElementById('payment-success-modal').style.display = 'none';
     }
 
