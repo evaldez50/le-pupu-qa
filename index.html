@@ -1014,7 +1014,12 @@
       loginWithGoogle();
     }
 
-    function showPaywall(msg) {
+    async function showPaywall(msg) {
+      // Re-verificar hasPaid desde BD antes de mostrar el paywall
+      if (!window.appUser.hasPaid && window.appUser.session) {
+        await setUser(window.appUser.session);
+        if (window.appUser.hasPaid) return; // Ya tiene premium, no mostrar paywall
+      }
       const m = document.getElementById('paywall-modal');
       if (m) {
         document.getElementById('paywall-msg').textContent = msg || '¡Desbloquea el acceso completo!';
