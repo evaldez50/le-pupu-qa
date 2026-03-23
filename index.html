@@ -976,6 +976,14 @@
       if (m) { m.style.display = 'flex'; if (typeof launchConfetti === 'function') launchConfetti(); }
     }
 
+    async function startPremium() {
+      // Re-verificar hasPaid desde DB antes de cerrar el modal (por si el webhook aún no había llegado)
+      if (!window.appUser.hasPaid && window.appUser.session) {
+        await setUser(window.appUser.session);
+      }
+      document.getElementById('payment-success-modal').style.display = 'none';
+    }
+
     // Modal que aparece después de un pago anónimo: pide crear cuenta Google
     function showPostPaymentRegistrationModal() {
       const existing = document.getElementById('post-payment-reg-modal');
@@ -9906,7 +9914,7 @@ init();
           <li>Acceso ilimitado — nuevas funcionalidades incluidas</li>
         </ul>
       </div>
-      <button onclick="document.getElementById('payment-success-modal').style.display='none'"
+      <button onclick="startPremium()"
         style="width:100%;padding:0.85rem;background:linear-gradient(135deg,#16A34A,#15803d);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer;">
         🚀 Empezar ahora
       </button>
