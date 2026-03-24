@@ -781,12 +781,14 @@
           const u = session.user;
           // Upsert: crea el perfil si no existe (trigger en DB también lo hace,
           // pero esto garantiza que los datos de Google se guarden correctamente)
+          // ignoreDuplicates: true = DO NOTHING si ya existe el perfil
+          // Esto evita resetear has_paid cuando el usuario ya pagó
           await _supabase.from('user_profiles').upsert({
             id: u.id,
             email: u.email || null,
             full_name: u.user_metadata?.full_name || u.user_metadata?.name || null,
             avatar_url: u.user_metadata?.avatar_url || u.user_metadata?.picture || null,
-          }, { onConflict: 'id', ignoreDuplicates: false });
+          }, { onConflict: 'id', ignoreDuplicates: true });
 
           const { data, error } = await _supabase
             .from('user_profiles')
