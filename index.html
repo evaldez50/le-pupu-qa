@@ -644,25 +644,30 @@
             const freshLogin = sessionStorage.getItem('oauthStarted') === 'true';
             sessionStorage.removeItem('oauthStarted');
 
-            // ESCENARIO 2: Login desde perfil → si no ha pagado, llevarlo al pago
+            // ESCENARIO 2 (post-pago anónimo): Registró cuenta después de pagar
+            // Verificar PRIMERO — tiene prioridad sobre loginFromProfile
+            const postPaymentReg = localStorage.getItem('postPaymentReg') === 'true';
+            if (postPaymentReg) {
+              localStorage.removeItem('postPaymentReg');
+              sessionStorage.removeItem('loginFromProfile'); // limpiar flag que pudiera interferir
+              await activatePendingPayment(session.user.email);
+              renderAuthUI();
+              showPaymentSuccessModal();
+              return;
+            }
+
+            // ESCENARIO 3: Login desde perfil (botón "Ya tienes cuenta")
             const loginFromProfile = sessionStorage.getItem('loginFromProfile') === 'true';
             if (freshLogin && loginFromProfile) {
               sessionStorage.removeItem('loginFromProfile');
               if (!window.appUser.hasPaid) {
+                // No ha pagado → llevar al pago
                 setTimeout(() => startCheckout(), 300);
+              } else {
+                // Ya pagó → bienvenida premium
+                showToast('¡Bienvenido de vuelta! Tienes acceso Premium completo ⭐', 5000);
+                renderAuthUI();
               }
-              // ESCENARIO 3: ya pagó → sólo se loguea, no hace nada extra
-              return;
-            }
-
-            // ESCENARIO 1 (post-pago): Registra cuenta después de haber pagado anónimamente
-            // Usamos localStorage para sobrevivir redirects de OAuth entre dominios
-            const postPaymentReg = localStorage.getItem('postPaymentReg') === 'true';
-            if (postPaymentReg) {
-              localStorage.removeItem('postPaymentReg');
-              await activatePendingPayment(session.user.email);
-              renderAuthUI();
-              showPaymentSuccessModal();
               return;
             }
 
