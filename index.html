@@ -743,12 +743,9 @@
           .maybeSingle();
 
         if (data) {
-          // Email está en pending → activar acceso premium
+          // Email está en pending → activar acceso premium (solo update has_paid)
           const u = window.appUser.session.user;
-          await _supabase.from('user_profiles').upsert(
-            { id: u.id, email: u.email, has_paid: true },
-            { onConflict: 'id' }
-          );
+          await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
           window.appUser.hasPaid = true;
           console.log('[Auth] ✅ Pago anónimo activado para', email);
         } else {
@@ -761,9 +758,7 @@
             if (d2) {
               clearInterval(poll);
               const u = window.appUser.session.user;
-              await _supabase.from('user_profiles').upsert(
-                { id: u.id, email: u.email, has_paid: true }, { onConflict: 'id' }
-              );
+              await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
               window.appUser.hasPaid = true;
               renderAuthUI();
               console.log('[Auth] ✅ Pago anónimo activado tras polling');
@@ -784,26 +779,33 @@
       if (session) {
         try {
           const u = session.user;
-          // Upsert: crea el perfil si no existe (trigger en DB también lo hace,
-          // pero esto garantiza que los datos de Google se guarden correctamente)
-          // ignoreDuplicates: true = DO NOTHING si ya existe el perfil
-          // Esto evita resetear has_paid cuando el usuario ya pagó
-          await _supabase.from('user_profiles').upsert({
-            id: u.id,
-            email: u.email || null,
-            full_name: u.user_metadata?.full_name || u.user_metadata?.name || null,
-            avatar_url: u.user_metadata?.avatar_url || u.user_metadata?.picture || null,
-          }, { onConflict: 'id', ignoreDuplicates: true });
-
+          // SOLO leer — nunca hacer upsert/update aquí para no corromper has_paid
+          // El trigger de DB crea el perfil en el primer registro
           const { data, error } = await _supabase
             .from('user_profiles')
-            .select('has_paid')
+            .select('has_paid, full_name, avatar_url')
             .eq('id', u.id)
             .single();
-          if (error) console.warn('[Auth] user_profiles query error:', error.message);
-          window.appUser.profile = data || null;
-          window.appUser.hasPaid = data?.has_paid === true;
-          console.log('[Auth] setUser hasPaid:', window.appUser.hasPaid);
+
+          if (error && error.code !== 'PGRST116') {
+            console.warn('[Auth] user_profiles query error:', error.message);
+          }
+
+          if (!data) {
+            // Perfil no existe aún (trigger no corrió) — crearlo sin has_paid
+            await _supabase.from('user_profiles').insert({
+              id: u.id,
+              email: u.email || null,
+              full_name: u.user_metadata?.full_name || u.user_metadata?.name || null,
+              avatar_url: u.user_metadata?.avatar_url || u.user_metadata?.picture || null,
+            });
+            window.appUser.profile = null;
+            window.appUser.hasPaid = false;
+          } else {
+            window.appUser.profile = data;
+            window.appUser.hasPaid = data.has_paid === true;
+          }
+          console.log('[Auth] setUser hasPaid:', window.appUser.hasPaid, '| DB has_paid:', data?.has_paid);
         } catch (e) {
           console.error('[Auth] setUser error:', e.message);
           window.appUser.profile = null;
