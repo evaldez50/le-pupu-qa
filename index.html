@@ -829,8 +829,8 @@
     // Login desde el ícono de perfil — ESCENARIOS 2 y 3
     // Marca loginFromProfile para que initAuth sepa que si no ha pagado, debe ir al pago
     function loginFromProfileIcon() {
-      sessionStorage.setItem('loginFromProfile', 'true');
-      loginWithGoogle();
+      // Según escenario 1 del doc: mostrar paywall con 3 opciones, no ir directo a Google
+      showPaywall('Inicia sesión o crea tu cuenta para acceder a todas las funciones.');
     }
 
     async function logout() {
