@@ -614,7 +614,9 @@
     (function() {
       const p = new URLSearchParams(window.location.search);
       if (p.get('payment') === 'success') {
-        window._stripeSessionId = p.get('sid') || null; // {CHECKOUT_SESSION_ID} si está configurado
+        const sid = p.get('sid') || null; // {CHECKOUT_SESSION_ID} configurado en Stripe
+        window._stripeSessionId = sid;
+        if (sid) localStorage.setItem('stripeSessionId', sid); // persiste para sobrevivir OAuth redirect
         history.replaceState({}, '', window.location.pathname + window.location.hash);
         window._pendingPaymentSuccess = true;
       }
@@ -737,39 +739,63 @@
       }
     }
 
-    // Activa el acceso premium revisando pending_activations por email
+    // Activa el acceso premium revisando pending_activations
+    // Busca por stripe_session_id (más confiable) o por email como fallback
     async function activatePendingPayment(email) {
-      if (!email) return;
       try {
-        const { data } = await _supabase
-          .from('pending_activations')
-          .select('email')
-          .eq('email', email)
-          .maybeSingle();
+        const u = window.appUser.session.user;
+        const sessionId = localStorage.getItem('stripeSessionId');
+
+        // Función interna que busca y activa
+        async function tryActivate() {
+          let found = null;
+
+          // 1) Buscar por stripe_session_id (no depende del email)
+          if (sessionId) {
+            const { data } = await _supabase
+              .from('pending_activations')
+              .select('email, stripe_session_id')
+              .eq('stripe_session_id', sessionId)
+              .maybeSingle();
+            if (data) found = data;
+          }
+
+          // 2) Fallback: buscar por email del Google account
+          if (!found && email) {
+            const { data } = await _supabase
+              .from('pending_activations')
+              .select('email')
+              .eq('email', email)
+              .maybeSingle();
+            if (data) found = data;
+          }
+
+          return found;
+        }
+
+        let data = await tryActivate();
 
         if (data) {
-          // Email está en pending → activar acceso premium (solo update has_paid)
-          const u = window.appUser.session.user;
           await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
           window.appUser.hasPaid = true;
-          console.log('[Auth] ✅ Pago anónimo activado para', email);
+          localStorage.removeItem('stripeSessionId');
+          console.log('[Auth] ✅ Pago activado por', sessionId ? 'session_id' : 'email');
         } else {
-          // No se encontró pendiente — el webhook puede no haber llegado aún, polling
+          // Webhook puede no haber llegado aún → polling
           let attempts = 0;
           const poll = setInterval(async () => {
             attempts++;
-            const { data: d2 } = await _supabase
-              .from('pending_activations').select('email').eq('email', email).maybeSingle();
+            const d2 = await tryActivate();
             if (d2) {
               clearInterval(poll);
-              const u = window.appUser.session.user;
               await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
               window.appUser.hasPaid = true;
+              localStorage.removeItem('stripeSessionId');
               renderAuthUI();
-              console.log('[Auth] ✅ Pago anónimo activado tras polling');
-            } else if (attempts >= 5) {
+              console.log('[Auth] ✅ Pago activado tras polling');
+            } else if (attempts >= 8) {
               clearInterval(poll);
-              console.warn('[Auth] ⚠️ No se encontró pago pendiente para', email);
+              console.warn('[Auth] ⚠️ No se encontró pago pendiente. sessionId:', sessionId, 'email:', email);
               showToast('Cuenta creada. Si ya pagaste, el acceso se activará en breve.');
             }
           }, 2000);
