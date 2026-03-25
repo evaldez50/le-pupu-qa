@@ -685,19 +685,19 @@
             }
 
             // ESCENARIO 3: Login desde perfil (botón "Ya tienes cuenta")
+            // Limpiar flag aunque freshLogin sea false para evitar flags huérfanos
             const loginFromProfile = sessionStorage.getItem('loginFromProfile') === 'true';
-            if (freshLogin && loginFromProfile) {
+            if (loginFromProfile) {
               sessionStorage.removeItem('loginFromProfile');
-              if (window.appUser.isNewUser) {
-                // No existe en el sistema → bloquear y cerrar sesión
+              if (!window.appUser.hasPaid) {
+                // Sin acceso premium (usuario nuevo o existente sin pago) → bloquear
+                // El trigger de DB ya crea el perfil, así que isNewUser siempre es false.
+                // La única distinción válida es has_paid.
                 window._forceSignOut = true;
                 window.appUser.session = null;
                 window.appUser.hasPaid = false;
                 renderAuthUI();
                 await _supabase.auth.signOut();
-              } else if (!window.appUser.hasPaid) {
-                // Cuenta existe pero sin pago → llevar al pago
-                setTimeout(() => startCheckout(), 300);
               } else {
                 // Ya pagó → bienvenida premium
                 showToast('¡Bienvenido de vuelta! Tienes acceso Premium completo ⭐', 5000);
