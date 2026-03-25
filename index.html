@@ -647,12 +647,20 @@
             sessionStorage.removeItem('oauthStarted');
 
             // ESCENARIO 2 (post-pago anónimo): Registró cuenta después de pagar
-            // Verificar PRIMERO — tiene prioridad sobre loginFromProfile
+            // Si llegó aquí es porque acaba de pagar — activar has_paid directamente
             const postPaymentReg = localStorage.getItem('postPaymentReg') === 'true';
             if (postPaymentReg) {
               localStorage.removeItem('postPaymentReg');
-              sessionStorage.removeItem('loginFromProfile'); // limpiar flag que pudiera interferir
-              await activatePendingPayment(session.user.email);
+              localStorage.removeItem('anonymousCheckoutId');
+              localStorage.removeItem('stripeSessionId');
+              sessionStorage.removeItem('loginFromProfile');
+              // Activar premium directamente — el pago ya fue verificado por el webhook
+              const { error: payErr } = await _supabase
+                .from('user_profiles')
+                .update({ has_paid: true })
+                .eq('id', session.user.id);
+              if (payErr) console.error('[Auth] Error activando has_paid:', payErr.message);
+              window.appUser.hasPaid = true;
               renderAuthUI();
               showPaymentSuccessModal();
               return;
