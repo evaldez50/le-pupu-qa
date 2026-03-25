@@ -632,6 +632,24 @@
       _supabase.auth.onAuthStateChange(async (event, session) => {
         console.log('[Auth] EVENT:', event, '|', session?.user?.email || 'sin sesión');
 
+        // Bloqueo de cuenta no registrada: si _forceSignOut está activo,
+        // rechazar cualquier SIGNED_IN hasta que el signOut complete
+        if (window._forceSignOut) {
+          if (event === 'SIGNED_IN' || (event === 'INITIAL_SESSION' && session)) {
+            await _supabase.auth.signOut();
+            return;
+          }
+          if (event === 'SIGNED_OUT') {
+            window._forceSignOut = false;
+            showToast('⚠️ Esta cuenta de Google no está registrada. Primero compra tu acceso.', 7000);
+            window.appUser.session = null;
+            window.appUser.profile = null;
+            window.appUser.hasPaid = false;
+            renderAuthUI();
+          }
+          return;
+        }
+
         // Render UI inmediatamente con la sesión (sin esperar consultas DB)
         window.appUser.session = session;
         if (!session) { window.appUser.profile = null; window.appUser.hasPaid = false; }
@@ -671,10 +689,12 @@
             if (freshLogin && loginFromProfile) {
               sessionStorage.removeItem('loginFromProfile');
               if (window.appUser.isNewUser) {
-                // No existe en el sistema → cerrar sesión y mostrar error
-                await _supabase.auth.signOut();
-                showToast('⚠️ Esta cuenta de Google no está registrada. Primero compra tu acceso y crea tu cuenta.', 7000);
+                // No existe en el sistema → bloquear y cerrar sesión
+                window._forceSignOut = true;
+                window.appUser.session = null;
+                window.appUser.hasPaid = false;
                 renderAuthUI();
+                await _supabase.auth.signOut();
               } else if (!window.appUser.hasPaid) {
                 // Cuenta existe pero sin pago → llevar al pago
                 setTimeout(() => startCheckout(), 300);
