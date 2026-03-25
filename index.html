@@ -650,14 +650,16 @@
           return;
         }
 
-        // Render UI inmediatamente con la sesión (sin esperar consultas DB)
+        // Si viene de "Ya tienes cuenta", NO renderizar sesión aún — evita flash de login
+        const _isLoginFromProfile = sessionStorage.getItem('loginFromProfile') === 'true';
+
         window.appUser.session = session;
         if (!session) { window.appUser.profile = null; window.appUser.hasPaid = false; }
-        renderAuthUI();
+        if (!_isLoginFromProfile) renderAuthUI();
 
-        // Luego cargar datos del perfil (hasPaid, etc.)
+        // Cargar datos del perfil (hasPaid, etc.)
         await setUser(session);
-        renderAuthUI();
+        if (!_isLoginFromProfile) renderAuthUI();
 
         if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
           if (session) {
@@ -1061,18 +1063,24 @@
 
     async function startPremium() {
       const btn = document.querySelector('#payment-success-modal button');
-      // Siempre confirmar desde DB antes de cerrar
+      // Si hasPaid ya está confirmado, cerrar inmediatamente sin polling
+      if (window.appUser.hasPaid) {
+        renderAuthUI();
+        document.getElementById('payment-success-modal').style.display = 'none';
+        return;
+      }
+      // Polling solo si por alguna razón hasPaid no está confirmado aún
       if (window.appUser.session) {
         if (btn) { btn.textContent = '⏳ Confirmando acceso...'; btn.disabled = true; }
         let attempts = 0;
-        while (!window.appUser.hasPaid && attempts < 15) {
+        while (!window.appUser.hasPaid && attempts < 8) {
           await setUser(window.appUser.session);
           if (window.appUser.hasPaid) break;
-          await new Promise(r => setTimeout(r, 2000));
+          await new Promise(r => setTimeout(r, 1500));
           attempts++;
         }
       }
-      window.appUser.hasPaid = true; // Garantizar estado local
+      window.appUser.hasPaid = true;
       renderAuthUI();
       document.getElementById('payment-success-modal').style.display = 'none';
     }
