@@ -56,21 +56,44 @@ serve(async (req: Request) => {
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-  const userId = session.client_reference_id;
+  const refId = session.client_reference_id; // UUID de usuario logueado O UUID anónimo del checkout
   const customerEmail = session.customer_details?.email || session.customer_email || null;
 
-  if (userId) {
-    // CASO A: Usuario logueado al pagar — actualizar por UUID
-    const { error } = await supabase
+  if (refId) {
+    // Verificar si refId corresponde a un usuario registrado en user_profiles
+    const { data: profile } = await supabase
       .from('user_profiles')
-      .upsert({ id: userId, has_paid: true }, { onConflict: 'id' });
-    if (error) {
-      console.error('Supabase upsert error (by id):', error);
-      return new Response('DB update failed', { status: 500 });
+      .select('id')
+      .eq('id', refId)
+      .maybeSingle();
+
+    if (profile) {
+      // CASO A: Usuario logueado al pagar — actualizar has_paid directamente
+      const { error } = await supabase
+        .from('user_profiles')
+        .update({ has_paid: true })
+        .eq('id', refId);
+      if (error) {
+        console.error('Supabase update error (by id):', error);
+        return new Response('DB update failed', { status: 500 });
+      }
+      console.log(`✅ Usuario logueado ${refId} actualizado a Premium`);
+    } else {
+      // CASO B: UUID anónimo generado por el app — guardar en pending_activations
+      const { error } = await supabase
+        .from('pending_activations')
+        .upsert(
+          { email: customerEmail || refId, stripe_session_id: session.id, anonymous_checkout_id: refId },
+          { onConflict: 'email' }
+        );
+      if (error) {
+        console.error('Supabase pending_activations error (anon):', error);
+        return new Response('DB update failed', { status: 500 });
+      }
+      console.log(`⏳ Pago anónimo con checkout_id=${refId} registrado para ${customerEmail}`);
     }
-    console.log(`✅ Usuario ${userId} actualizado a Premium`);
   } else if (customerEmail) {
-    // CASO B: Pago anónimo — guardar email en pending_activations para activar al registrarse
+    // CASO C: Sin client_reference_id (backward compat) — guardar solo por email
     const { error } = await supabase
       .from('pending_activations')
       .upsert({ email: customerEmail, stripe_session_id: session.id }, { onConflict: 'email' });
@@ -78,7 +101,7 @@ serve(async (req: Request) => {
       console.error('Supabase pending_activations error:', error);
       return new Response('DB update failed', { status: 500 });
     }
-    console.log(`⏳ Pago anónimo registrado para ${customerEmail}`);
+    console.log(`⏳ Pago anónimo (sin refId) registrado para ${customerEmail}`);
   } else {
     console.error('No client_reference_id ni customer email');
     return new Response('Missing user info', { status: 400 });

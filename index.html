@@ -740,46 +740,56 @@
     }
 
     // Activa el acceso premium revisando pending_activations
-    // Busca por stripe_session_id (más confiable) o por email como fallback
+    // Orden de búsqueda: anonymousCheckoutId > stripe_session_id > email
     async function activatePendingPayment(email) {
       try {
         const u = window.appUser.session.user;
+        const anonId = localStorage.getItem('anonymousCheckoutId');
         const sessionId = localStorage.getItem('stripeSessionId');
 
-        // Función interna que busca y activa
         async function tryActivate() {
-          let found = null;
-
-          // 1) Buscar por stripe_session_id (no depende del email)
+          // 1) Por UUID anónimo generado antes del pago (más confiable, email-agnóstico)
+          if (anonId) {
+            const { data } = await _supabase
+              .from('pending_activations')
+              .select('anonymous_checkout_id')
+              .eq('anonymous_checkout_id', anonId)
+              .maybeSingle();
+            if (data) { console.log('[Auth] match por anonymousCheckoutId'); return data; }
+          }
+          // 2) Por stripe_session_id (si Stripe redirect URL tiene {CHECKOUT_SESSION_ID})
           if (sessionId) {
             const { data } = await _supabase
               .from('pending_activations')
-              .select('email, stripe_session_id')
+              .select('stripe_session_id')
               .eq('stripe_session_id', sessionId)
               .maybeSingle();
-            if (data) found = data;
+            if (data) { console.log('[Auth] match por stripe_session_id'); return data; }
           }
-
-          // 2) Fallback: buscar por email del Google account
-          if (!found && email) {
+          // 3) Fallback por email
+          if (email) {
             const { data } = await _supabase
               .from('pending_activations')
               .select('email')
               .eq('email', email)
               .maybeSingle();
-            if (data) found = data;
+            if (data) { console.log('[Auth] match por email'); return data; }
           }
-
-          return found;
+          return null;
         }
+
+        const activate = async () => {
+          await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
+          window.appUser.hasPaid = true;
+          localStorage.removeItem('anonymousCheckoutId');
+          localStorage.removeItem('stripeSessionId');
+        };
 
         let data = await tryActivate();
 
         if (data) {
-          await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
-          window.appUser.hasPaid = true;
-          localStorage.removeItem('stripeSessionId');
-          console.log('[Auth] ✅ Pago activado por', sessionId ? 'session_id' : 'email');
+          await activate();
+          console.log('[Auth] ✅ Pago activado');
         } else {
           // Webhook puede no haber llegado aún → polling
           let attempts = 0;
@@ -788,14 +798,12 @@
             const d2 = await tryActivate();
             if (d2) {
               clearInterval(poll);
-              await _supabase.from('user_profiles').update({ has_paid: true }).eq('id', u.id);
-              window.appUser.hasPaid = true;
-              localStorage.removeItem('stripeSessionId');
+              await activate();
               renderAuthUI();
               console.log('[Auth] ✅ Pago activado tras polling');
             } else if (attempts >= 8) {
               clearInterval(poll);
-              console.warn('[Auth] ⚠️ No se encontró pago pendiente. sessionId:', sessionId, 'email:', email);
+              console.warn('[Auth] ⚠️ No se encontró pago. anonId:', anonId, 'sessionId:', sessionId, 'email:', email);
               showToast('Cuenta creada. Si ya pagaste, el acceso se activará en breve.');
             }
           }, 2000);
@@ -1006,11 +1014,16 @@
       window.location.href = url.toString();
     }
 
-    // Checkout anónimo: va directo a Stripe sin pedir cuenta Google
+    // Checkout anónimo: genera UUID local → client_reference_id en Stripe
+    // Permite activar pago después sin depender del email
     function startAnonymousCheckout() {
       const link = window.STRIPE_PAYMENT_LINK || '';
       if (!link) { alert('⚙️ Pago próximamente disponible.'); return; }
-      window.location.href = link; // Sin client_reference_id — webhook lo guarda por email
+      const anonId = crypto.randomUUID();
+      localStorage.setItem('anonymousCheckoutId', anonId);
+      const url = new URL(link);
+      url.searchParams.set('client_reference_id', anonId);
+      window.location.href = url.toString();
     }
 
     function showPaymentSuccessModal() {
