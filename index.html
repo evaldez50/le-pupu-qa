@@ -7,8 +7,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Le Pupu Le Guagua – Aprende Francés</title>
-  <script type="module" crossorigin src="./assets/index-CEqiUfOt.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-Cgoc19HM.css">
+  <script type="module" crossorigin src="./assets/index-DN2Ji9kE.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CA4jvPJP.css">
 </head>
 <body>
 <div id="transitionOverlay"></div>
@@ -18,8 +18,308 @@
 <!-- Toast -->
 <div id="app-toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;padding:12px 24px;border-radius:12px;font-size:.9rem;font-weight:600;z-index:10000;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;max-width:90%;"></div>
 
+<!-- ═══════ SCREEN: LANDING ═══════ -->
+<div id="screen-landing" class="screen active">
+
+  <!-- Sticky nav -->
+  <nav class="landing-nav">
+    <div class="landing-nav-logo" onclick="showScreen('home')">
+      <svg width="30" height="30" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
+        <circle cx="62" cy="68" r="10" fill="white"/><circle cx="98" cy="68" r="10" fill="white"/>
+        <circle cx="64" cy="69" r="6" fill="#1F2937"/><circle cx="100" cy="69" r="6" fill="#1F2937"/>
+        <path d="M 64 88 Q 80 98 96 88" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="73" cy="44" rx="28" ry="18" fill="#0055A4"/>
+        <circle cx="62" cy="28" r="5" fill="#EF4135"/>
+      </svg>
+      <div class="landing-nav-logo-text">Le Pupu <span>Le Guagua</span></div>
+    </div>
+    <div class="landing-nav-right">
+      <button class="landing-nav-enter" onclick="showScreen('home')">Entrar</button>
+      <button class="landing-nav-cta" onclick="showScreen('home')">🚀 Empezar gratis</button>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="landing-hero">
+    <div class="landing-flag-strip"><div class="f-blue"></div><div class="f-white"></div><div class="f-red"></div></div>
+
+    <!-- Mascot SVG (full version) -->
+    <div class="landing-hero-mascot">
+      <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg" width="148" height="148">
+        <ellipse cx="80" cy="150" rx="40" ry="8" fill="rgba(0,0,0,.25)"/>
+        <ellipse cx="80" cy="105" rx="42" ry="38" fill="#4ADE80"/>
+        <ellipse cx="80" cy="112" rx="28" ry="24" fill="#BBF7D0"/>
+        <ellipse cx="42" cy="110" rx="12" ry="8" fill="#4ADE80" transform="rotate(-25,42,110)"/>
+        <ellipse cx="118" cy="110" rx="12" ry="8" fill="#4ADE80" transform="rotate(25,118,110)"/>
+        <ellipse cx="57" cy="137" rx="14" ry="9" fill="#4ADE80" transform="rotate(-15,57,137)"/>
+        <ellipse cx="103" cy="137" rx="14" ry="9" fill="#4ADE80" transform="rotate(15,103,137)"/>
+        <circle cx="80" cy="74" r="38" fill="#4ADE80"/>
+        <circle cx="62" cy="60" r="13" fill="white"/><circle cx="98" cy="60" r="13" fill="white"/>
+        <circle cx="64" cy="61" r="8" fill="#1F2937"/><circle cx="100" cy="61" r="8" fill="#1F2937"/>
+        <circle cx="67" cy="58" r="3" fill="white"/><circle cx="103" cy="58" r="3" fill="white"/>
+        <circle cx="75" cy="74" r="3.5" fill="#22C55E"/><circle cx="85" cy="74" r="3.5" fill="#22C55E"/>
+        <path d="M 64 83 Q 80 94 96 83" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="52" cy="78" rx="9" ry="6" fill="#FCA5A5" opacity=".5"/>
+        <ellipse cx="108" cy="78" rx="9" ry="6" fill="#FCA5A5" opacity=".5"/>
+        <ellipse cx="80" cy="39" rx="26" ry="6" fill="#1E3A5F"/>
+        <ellipse cx="73" cy="30" rx="30" ry="20" fill="#0055A4"/>
+        <ellipse cx="69" cy="26" rx="14" ry="9" fill="rgba(255,255,255,.15)"/>
+        <circle cx="62" cy="14" r="5" fill="#EF4135"/>
+        <text x="82" y="36" font-size="9" fill="#FFD166" text-anchor="middle">★</text>
+      </svg>
+    </div>
+
+    <div class="landing-hero-eyebrow">
+      <span class="dot"></span>Preparación TEF Canadá
+    </div>
+
+    <h1>Domina el francés para<br>el <span class="h1-accent">TEF Canadá</span></h1>
+
+    <p class="landing-hero-sub">
+      El método más completo para hispanohablantes — del <strong style="color:#fff;">A1 al C2</strong>, con ejercicios auténticos, conjugador interactivo y temario específico para tu visa.
+    </p>
+
+    <div class="landing-hero-cta-row">
+      <button class="lbtn-primary" onclick="showScreen('home')">🚀 Empezar gratis — sin registro</button>
+      <button class="lbtn-ghost" onclick="showScreen('temario')">📚 Ver temario</button>
+    </div>
+
+    <div class="landing-hero-trust">
+      <span>Sin tarjeta de crédito</span>
+      <span>A1 completo gratis</span>
+      <span>Sin anuncios</span>
+    </div>
+
+    <div class="landing-stats-bar">
+      <div class="landing-stats-item">
+        <span class="landing-stats-num">6</span>
+        <span class="landing-stats-label">Niveles</span>
+      </div>
+      <div class="landing-stats-item">
+        <span class="landing-stats-num">4</span>
+        <span class="landing-stats-label">Habilidades</span>
+      </div>
+      <div class="landing-stats-item">
+        <span class="landing-stats-num">1,230+</span>
+        <span class="landing-stats-label">Ejercicios</span>
+      </div>
+      <div class="landing-stats-item">
+        <span class="landing-stats-num">TEF</span>
+        <span class="landing-stats-label">Certificado</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ── -->
+  <div class="ls-dark">
+    <div class="ls-inner">
+      <p class="ls-eyebrow">QUÉ INCLUYE</p>
+      <h2 class="ls-title">Todo lo que necesitas para aprobar el TEF</h2>
+      <p class="ls-sub">Cobertura completa de las 4 competencias evaluadas en el examen, con ejercicios al nivel de dificultad real.</p>
+      <div class="landing-feat-grid">
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">📊</span>
+          <div class="landing-feat-title">6 Niveles CEFR (A1 → C2)</div>
+          <div class="landing-feat-desc">De principiante absoluto a maestría, perfectamente alineados con el Marco Europeo de Referencia.</div>
+          <span class="landing-feat-tag tag-free">A1 Gratis</span>
+        </div>
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">🎧</span>
+          <div class="landing-feat-title">Comprensión Oral (CO)</div>
+          <div class="landing-feat-desc">Ejercicios que simulan los audios del examen real — entrena tu oído con vocabulario auténtico del TEF.</div>
+          <span class="landing-feat-tag tag-free">A1 Gratis</span>
+        </div>
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">📖</span>
+          <div class="landing-feat-title">Comprensión Escrita (CE)</div>
+          <div class="landing-feat-desc">Textos, preguntas de opción múltiple y vocabulario contextual al nivel de dificultad del examen.</div>
+          <span class="landing-feat-tag tag-free">A1 Gratis</span>
+        </div>
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">🗣️</span>
+          <div class="landing-feat-title">Expresión Oral (EO)</div>
+          <div class="landing-feat-desc">Guías, estructuras y vocabulario para dominar la producción oral — desde presentaciones hasta debates.</div>
+          <span class="landing-feat-tag tag-free">A1 Gratis</span>
+        </div>
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">✍️</span>
+          <div class="landing-feat-title">Expresión Escrita (EE)</div>
+          <div class="landing-feat-desc">Modelos de redacción, conectores y estructuras para la producción escrita formal e informal.</div>
+          <span class="landing-feat-tag tag-free">A1 Gratis</span>
+        </div>
+        <div class="landing-feat-card">
+          <span class="landing-feat-icon">🔤</span>
+          <div class="landing-feat-title">Conjugador Interactivo</div>
+          <div class="landing-feat-desc">Practica 140+ verbos en 10 tiempos verbales con corrección automática — Groupe 1 (-ER) gratis.</div>
+          <span class="landing-feat-tag tag-free">G1 Gratis</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Levels ── -->
+  <div class="ls-white">
+    <div class="ls-inner">
+      <p class="ls-eyebrow">PROGRESIÓN CEFR</p>
+      <h2 class="ls-title">Un camino claro del principiante al maestro</h2>
+      <p class="ls-sub">Cada nivel está cuidadosamente estructurado con temas y ejercicios específicos para el TEF Canadá.</p>
+      <div class="landing-levels-grid">
+        <div class="landing-lvl-card lvl-a1" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">A1</span>
+          <span class="landing-lvl-name">Débutant</span>
+          <span class="landing-lvl-desc">Fundamentos del francés</span>
+          <span class="landing-lvl-free-tag">GRATIS</span>
+        </div>
+        <div class="landing-lvl-card lvl-a2" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">A2</span>
+          <span class="landing-lvl-name">Élémentaire</span>
+          <span class="landing-lvl-desc">Comunicación básica</span>
+        </div>
+        <div class="landing-lvl-card lvl-b1" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">B1</span>
+          <span class="landing-lvl-name">Intermédiaire</span>
+          <span class="landing-lvl-desc">Situaciones cotidianas</span>
+        </div>
+        <div class="landing-lvl-card lvl-b2" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">B2</span>
+          <span class="landing-lvl-name">Avancé</span>
+          <span class="landing-lvl-desc">Fluidez avanzada</span>
+        </div>
+        <div class="landing-lvl-card lvl-c1" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">C1</span>
+          <span class="landing-lvl-name">Autonome</span>
+          <span class="landing-lvl-desc">Dominio experto</span>
+        </div>
+        <div class="landing-lvl-card lvl-c2" onclick="showScreen('home')">
+          <span class="landing-lvl-badge">C2</span>
+          <span class="landing-lvl-name">Maîtrise</span>
+          <span class="landing-lvl-desc">Nivel nativo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── How it works ── -->
+  <div class="ls-gray">
+    <div class="ls-inner">
+      <p class="ls-eyebrow">CÓMO FUNCIONA</p>
+      <h2 class="ls-title">Tres pasos para dominar el francés</h2>
+      <p class="ls-sub">Sin complicaciones, sin curva de aprendizaje. Empieza a practicar en segundos.</p>
+      <div class="landing-steps">
+        <div class="landing-step">
+          <div class="landing-step-circle">🎯</div>
+          <div class="landing-step-num-label">Paso 1</div>
+          <div class="landing-step-title">Elige tu nivel</div>
+          <div class="landing-step-desc">Selecciona entre A1 y C2 según tu francés actual. ¿No sabes cuál? Empieza en A1 y el sistema se adapta.</div>
+        </div>
+        <div class="landing-step">
+          <div class="landing-step-circle">💪</div>
+          <div class="landing-step-num-label">Paso 2</div>
+          <div class="landing-step-title">Practica las 4 habilidades</div>
+          <div class="landing-step-desc">Trabaja CO, CE, EO y EE con ejercicios cronometrados al nivel del TEF Canadá. Sigue tu progreso en tiempo real.</div>
+        </div>
+        <div class="landing-step">
+          <div class="landing-step-circle">🏆</div>
+          <div class="landing-step-num-label">Paso 3</div>
+          <div class="landing-step-title">Supera el examen</div>
+          <div class="landing-step-desc">Llega preparado y confiado al TEF Canadá. Con práctica constante en nuestra plataforma, el examen no será sorpresa.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pricing ── -->
+  <div class="ls-white">
+    <div class="ls-inner">
+      <p class="ls-eyebrow">PRECIOS</p>
+      <h2 class="ls-title">Empieza gratis, desbloquea todo</h2>
+      <p class="ls-sub">Sin suscripciones, sin sorpresas. Pago único para acceso de por vida.</p>
+      <div class="landing-pricing-grid">
+
+        <!-- Free tier -->
+        <div class="landing-price-card price-free">
+          <div class="price-badge-wrap"><span class="price-badge">Gratis — Para siempre</span></div>
+          <div class="price-plan">Plan Gratuito</div>
+          <div class="price-amount">
+            <span class="price-currency">$</span>
+            <span class="price-num">0</span>
+          </div>
+          <div class="price-period">Sin tarjeta · Sin registro</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="pf-check">✅</span>Nivel A1 completo (CO, CE, EO, EE)</li>
+            <li><span class="pf-check">✅</span>Muestra de A2 → C2 (primeros 3 temas)</li>
+            <li><span class="pf-check">✅</span>Conjugador Groupe 1 — verbos -ER</li>
+            <li><span class="pf-check">✅</span>Historial de progreso</li>
+            <li><span class="pf-check pf-dim">🔒</span><span class="pf-dim">Niveles A2 a C2 completos</span></li>
+            <li><span class="pf-check pf-dim">🔒</span><span class="pf-dim">Conjugador grupos 2, 3 e irregulares</span></li>
+          </ul>
+          <button class="price-btn" onclick="showScreen('home')">Empezar gratis →</button>
+        </div>
+
+        <!-- Premium tier -->
+        <div class="landing-price-card price-premium">
+          <div class="price-badge-wrap"><span class="price-badge">🔥 Precio de lanzamiento</span></div>
+          <div class="price-plan">Plan Premium</div>
+          <div class="price-strikeout">Precio regular: $50 USD</div>
+          <div class="price-amount">
+            <span class="price-currency" style="color:#FFD166;">$</span>
+            <span class="price-num" style="color:#FFD166;">29.99</span>
+          </div>
+          <div class="price-period">USD · Pago único · Acceso de por vida</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="pf-check">✅</span>Todo lo del plan gratuito</li>
+            <li><span class="pf-check">✅</span>Niveles A1 → C2 completamente desbloqueados</li>
+            <li><span class="pf-check">✅</span>Conjugador completo — 140+ verbos</li>
+            <li><span class="pf-check">✅</span>Todos los temas del temario TEF Canadá</li>
+            <li><span class="pf-check">✅</span>Nuevas funcionalidades incluidas sin costo</li>
+            <li><span class="pf-check">✅</span>Sin restricciones — práctica ilimitada</li>
+          </ul>
+          <button class="price-btn" onclick="showScreen('home')">Obtener acceso completo — $29.99</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Final CTA ── -->
+  <div class="landing-cta-final">
+    <div class="lcta-inner">
+      <h2>¿Listo para el <span>TEF Canadá</span>?</h2>
+      <p>Únete ahora y empieza a practicar con el nivel A1 completamente gratis. Sin tarjeta de crédito, sin compromisos.</p>
+      <button class="lbtn-primary" onclick="showScreen('home')">🚀 Empezar ahora — es gratis</button>
+      <div class="landing-cta-final-trust">
+        <span>Sin registro obligatorio</span>
+        <span>Sin tarjeta de crédito</span>
+        <span>Sin anuncios</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="landing-footer">
+    <div class="landing-footer-logo">
+      <svg width="22" height="22" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
+        <circle cx="62" cy="68" r="10" fill="white"/><circle cx="98" cy="68" r="10" fill="white"/>
+        <circle cx="64" cy="69" r="6" fill="#1F2937"/><circle cx="100" cy="69" r="6" fill="#1F2937"/>
+        <path d="M 64 88 Q 80 98 96 88" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="73" cy="44" rx="28" ry="18" fill="#0055A4"/>
+        <circle cx="62" cy="28" r="5" fill="#EF4135"/>
+      </svg>
+      <span class="landing-footer-logo-text">Le Pupu <span>Le Guagua</span></span>
+    </div>
+    <div class="landing-footer-tagline">
+      Alineado con el examen TEF Canadá · Marco CEFR A1–C2 · Hecho con ❤️ para hispanohablantes
+    </div>
+  </footer>
+
+</div>
+
 <!-- ═══════ SCREEN: HOME ═══════ -->
-<div id="screen-home" class="screen active">
+<div id="screen-home" class="screen">
   <div class="star-field" id="starField"></div>
   <div class="home-inner">
     <div class="flag-ribbon"><div class="fr-blue"></div><div class="fr-white"></div><div class="fr-red"></div></div>
