@@ -1683,7 +1683,7 @@ El francés varía geográficamente (variaciones diatópicas: belge, suisse, qu�
       <div class="temario-empty-icon">🔍</div>
       <div>No se encontraron temas con "<strong>${e}</strong>"</div>
     </div>`;return}u.innerHTML=r.map(c=>{const d=c.s.map(v=>`<span class="t-badge ${v}">${o[v]}</span>`).join(""),p=!!Ra[c.t]?`<button class="temario-practice-btn"
-           onclick='startPractice(${JSON.stringify(c.t)})'>▶ Practicar</button>`:"";return`<div class="temario-item">
+           onclick="startPractice(${JSON.stringify(c.t).replace(/"/g,"&quot;")})">▶ Practicar</button>`:"";return`<div class="temario-item">
       <div class="temario-item-top">
         <div class="temario-item-info">
           <div class="temario-topic-name">${c.t}</div>
