@@ -162,3 +162,8 @@ body.dark-mode .email-capture-card h3,body.dark-mode .referral-card h3{color:var
 body.dark-mode .email-capture-card p,body.dark-mode .referral-card p{color:var(--dm-text2)!important}
 body.dark-mode .email-capture-input{background:var(--dm-surface2)!important;border-color:var(--dm-border)!important;color:var(--dm-text)!important}
 body.dark-mode .results-scarcity{color:var(--dm-text2)!important}
+
+/* ── Fix: screen-test positioning context ── */
+#screen-test{position:relative}
+.test-intro-overlay{z-index:9990!important;position:fixed!important}
+.exit-test-modal{z-index:9991!important;position:fixed!important}

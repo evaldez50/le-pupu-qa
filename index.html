@@ -885,7 +885,8 @@
 
 <!-- Modal de Pago Exitoso -->
 <div id="payment-success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:20px;padding:2.2rem 2rem;max-width:400px;width:92%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.35);">
+  <div style="background:#fff;border-radius:20px;padding:2.2rem 2rem;max-width:400px;width:92%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.35);position:relative;">
+    <button onclick="document.getElementById('payment-success-modal').style.display='none'" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer">&times;</button>
     <div style="font-size:3rem;margin-bottom:0.4rem;">🎉</div>
     <h2 style="margin:0 0 0.4rem;color:#1a1a2e;font-size:1.4rem;">¡Bienvenido a Premium!</h2>
     <p style="color:#444;margin-bottom:1.4rem;font-size:0.97rem;line-height:1.5;">
