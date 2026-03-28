@@ -473,6 +473,12 @@
     <div class="landing-footer-tagline">
       Alineado con el examen TEF Canadá · Marco CEFR A1–C2 · Hecho con ❤️ para hispanohablantes
     </div>
+    <div class="landing-footer-legal">
+      <a href="#" onclick="event.preventDefault();document.getElementById('terms-modal').style.display='flex'">Términos y Condiciones</a>
+      <span>·</span>
+      <a href="#" onclick="event.preventDefault();document.getElementById('privacy-modal').style.display='flex'">Política de Privacidad</a>
+    </div>
+    <div class="landing-footer-copy">© 2025 Le Pupu Le Guagua. Todos los derechos reservados.</div>
   </footer>
 
 </div>
@@ -832,6 +838,145 @@
       <button onclick="loginToExistingAccount()" style="background:none;border:none;color:#4285F4;cursor:pointer;font-size:0.82rem;text-decoration:underline;padding:4px;">
         ¿Ya tienes cuenta? Iniciar sesión
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: TÉRMINOS Y CONDICIONES ═══════ -->
+<div id="terms-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div class="legal-modal-content">
+    <div class="legal-modal-header">
+      <h2>Términos y Condiciones</h2>
+      <button class="legal-modal-close" onclick="document.getElementById('terms-modal').style.display='none'">&times;</button>
+    </div>
+    <div class="legal-modal-body">
+      <p class="legal-updated">Última actualización: 28 de marzo de 2026</p>
+
+      <h3>1. Aceptación de los Términos</h3>
+      <p>Al acceder y utilizar la plataforma Le Pupu Le Guagua ("el Servicio"), aceptas estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguno de estos términos, no debes utilizar el Servicio.</p>
+
+      <h3>2. Descripción del Servicio</h3>
+      <p>Le Pupu Le Guagua es una plataforma educativa en línea diseñada para ayudar a hispanohablantes a prepararse para el examen TEF Canadá (Test d'Évaluation de Français). El Servicio ofrece ejercicios de práctica en comprensión oral, comprensión escrita, expresión oral, expresión escrita y conjugación verbal.</p>
+      <p><strong>Importante:</strong> Le Pupu Le Guagua es una herramienta de práctica complementaria. No somos una institución certificadora ni estamos afiliados oficialmente con la Chambre de commerce et d'industrie de Paris Île-de-France (CCI), entidad responsable del examen TEF. No garantizamos la aprobación del examen TEF ni ningún resultado específico.</p>
+
+      <h3>3. Planes y Precios</h3>
+      <p><strong>Plan Gratuito:</strong> Incluye acceso al nivel A1 y funciones básicas sin costo alguno. No requiere tarjeta de crédito ni registro obligatorio.</p>
+      <p><strong>Plan Premium:</strong> Disponible por un pago único de $29.99 USD. Incluye acceso completo a todos los niveles (A1–C2), todas las habilidades, el conjugador completo y futuras actualizaciones de contenido. No hay suscripciones mensuales, cargos ocultos ni renovaciones automáticas.</p>
+
+      <h3>4. Pagos y Reembolsos</h3>
+      <p>Los pagos se procesan de forma segura a través de Stripe. No almacenamos datos de tarjetas de crédito en nuestros servidores.</p>
+      <p>Dado que el plan Premium otorga acceso inmediato al contenido digital, las compras son finales y no reembolsables, salvo en los casos requeridos por la legislación aplicable. Si experimentas problemas técnicos que impidan el uso del Servicio, contáctanos y evaluaremos tu caso individualmente.</p>
+
+      <h3>5. Cuentas de Usuario</h3>
+      <p>Para acceder al plan Premium es necesario crear una cuenta mediante autenticación con Google. Eres responsable de mantener la seguridad de tu cuenta. Cada licencia Premium es personal e intransferible, para uso individual.</p>
+
+      <h3>6. Propiedad Intelectual</h3>
+      <p>Todo el contenido del Servicio — incluyendo ejercicios, textos, diseño, ilustraciones, código fuente y la marca Le Pupu Le Guagua — es propiedad de sus creadores y está protegido por leyes de propiedad intelectual. No está permitido copiar, reproducir, distribuir ni crear obras derivadas del contenido sin autorización expresa por escrito.</p>
+
+      <h3>7. Uso Aceptable</h3>
+      <p>Te comprometes a utilizar el Servicio únicamente con fines educativos personales. Está prohibido:</p>
+      <ul>
+        <li>Compartir tu cuenta Premium con terceros.</li>
+        <li>Reproducir, extraer o redistribuir el contenido de los ejercicios.</li>
+        <li>Intentar acceder a funciones Premium sin la debida autorización.</li>
+        <li>Usar el Servicio para cualquier fin ilegal o no autorizado.</li>
+        <li>Interferir con el funcionamiento normal de la plataforma.</li>
+      </ul>
+
+      <h3>8. Disponibilidad del Servicio</h3>
+      <p>Nos esforzamos por mantener el Servicio disponible de manera continua, pero no garantizamos un funcionamiento ininterrumpido. Podemos realizar mantenimientos, actualizaciones o modificaciones al contenido sin previo aviso. En caso de discontinuación permanente del Servicio, notificaremos a los usuarios con al menos 30 días de anticipación.</p>
+
+      <h3>9. Limitación de Responsabilidad</h3>
+      <p>El Servicio se proporciona "tal cual" (as is). No garantizamos resultados específicos en el examen TEF ni en ningún otro examen de francés. Nuestra responsabilidad máxima se limita al monto pagado por el usuario por el plan Premium.</p>
+
+      <h3>10. Modificaciones a los Términos</h3>
+      <p>Nos reservamos el derecho de modificar estos Términos en cualquier momento. Los cambios se publicarán en esta página con la fecha de actualización. El uso continuado del Servicio después de la publicación de cambios constituye tu aceptación de los nuevos Términos.</p>
+
+      <h3>11. Legislación Aplicable</h3>
+      <p>Estos Términos se rigen por las leyes aplicables en la jurisdicción del usuario. Cualquier disputa se resolverá preferentemente mediante mediación amistosa antes de recurrir a instancias judiciales.</p>
+
+      <h3>12. Contacto</h3>
+      <p>Para consultas sobre estos Términos, puedes contactarnos a través de nuestros canales oficiales disponibles en la plataforma.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: POLÍTICA DE PRIVACIDAD ═══════ -->
+<div id="privacy-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div class="legal-modal-content">
+    <div class="legal-modal-header">
+      <h2>Política de Privacidad</h2>
+      <button class="legal-modal-close" onclick="document.getElementById('privacy-modal').style.display='none'">&times;</button>
+    </div>
+    <div class="legal-modal-body">
+      <p class="legal-updated">Última actualización: 28 de marzo de 2026</p>
+
+      <h3>1. Introducción</h3>
+      <p>En Le Pupu Le Guagua nos comprometemos a proteger tu privacidad. Esta Política de Privacidad explica qué datos recopilamos, cómo los usamos y cuáles son tus derechos. Al utilizar nuestro Servicio, aceptas las prácticas descritas en esta política.</p>
+
+      <h3>2. Datos que Recopilamos</h3>
+      <h4>2.1. Datos proporcionados por el usuario</h4>
+      <ul>
+        <li><strong>Datos de autenticación:</strong> Al registrarte con Google, recibimos tu nombre, dirección de correo electrónico y foto de perfil. No accedemos a tu contraseña de Google.</li>
+        <li><strong>Datos de pago:</strong> Los pagos se procesan exclusivamente a través de Stripe. No almacenamos, procesamos ni tenemos acceso a los datos de tu tarjeta de crédito o débito. Stripe actúa como procesador de pagos independiente bajo su propia política de privacidad.</li>
+      </ul>
+      <h4>2.2. Datos generados por el uso</h4>
+      <ul>
+        <li><strong>Progreso de aprendizaje:</strong> Resultados de ejercicios, puntuaciones, niveles completados, historial de práctica y tiempo de uso.</li>
+        <li><strong>Datos técnicos:</strong> Tipo de navegador, sistema operativo, tipo de dispositivo y resolución de pantalla — únicamente con fines de compatibilidad y mejora del Servicio.</li>
+      </ul>
+      <h4>2.3. Datos que NO recopilamos</h4>
+      <ul>
+        <li>No recopilamos datos de ubicación precisa (GPS).</li>
+        <li>No recopilamos datos de contactos, mensajes ni archivos de tu dispositivo.</li>
+        <li>No utilizamos cookies de seguimiento publicitario ni compartimos datos con redes de publicidad.</li>
+      </ul>
+
+      <h3>3. Cómo Usamos tus Datos</h3>
+      <p>Utilizamos los datos recopilados exclusivamente para:</p>
+      <ul>
+        <li>Proveer y mantener el Servicio (autenticación, acceso Premium, sincronización de progreso).</li>
+        <li>Personalizar tu experiencia de aprendizaje (mostrar tu progreso, recomendar ejercicios).</li>
+        <li>Mejorar el Servicio (analizar patrones de uso anónimos para optimizar contenido y funcionalidad).</li>
+        <li>Comunicarnos contigo si es necesario (cambios en el Servicio, problemas con tu cuenta).</li>
+      </ul>
+
+      <h3>4. Almacenamiento y Seguridad</h3>
+      <p>Tus datos se almacenan en servidores seguros proporcionados por Supabase, que implementa cifrado en tránsito (TLS/SSL) y en reposo. Aplicamos medidas de seguridad razonables para proteger tus datos contra acceso no autorizado, alteración o destrucción.</p>
+      <p>Ningún sistema es 100% seguro. Si detectamos una brecha de seguridad que afecte tus datos personales, te notificaremos en un plazo razonable.</p>
+
+      <h3>5. Compartición de Datos</h3>
+      <p><strong>No vendemos, alquilamos ni compartimos tus datos personales con terceros con fines comerciales o publicitarios.</strong></p>
+      <p>Compartimos datos únicamente con:</p>
+      <ul>
+        <li><strong>Google (autenticación):</strong> Solo los datos necesarios para el inicio de sesión (OAuth 2.0).</li>
+        <li><strong>Stripe (pagos):</strong> Solo los datos necesarios para procesar tu compra.</li>
+        <li><strong>Supabase (infraestructura):</strong> Proveedor de base de datos y autenticación que aloja el Servicio.</li>
+      </ul>
+      <p>Podremos divulgar datos si es requerido por ley, orden judicial o para proteger la seguridad del Servicio y sus usuarios.</p>
+
+      <h3>6. Tus Derechos</h3>
+      <p>Tienes derecho a:</p>
+      <ul>
+        <li><strong>Acceso:</strong> Solicitar una copia de los datos personales que tenemos sobre ti.</li>
+        <li><strong>Rectificación:</strong> Corregir datos inexactos o incompletos.</li>
+        <li><strong>Eliminación:</strong> Solicitar la eliminación de tu cuenta y datos personales asociados.</li>
+        <li><strong>Portabilidad:</strong> Solicitar tus datos en un formato estructurado y de uso común.</li>
+        <li><strong>Oposición:</strong> Oponerte al procesamiento de tus datos en ciertos casos.</li>
+      </ul>
+      <p>Para ejercer estos derechos, contáctanos a través de nuestros canales oficiales. Responderemos a tu solicitud en un plazo máximo de 30 días.</p>
+
+      <h3>7. Menores de Edad</h3>
+      <p>El Servicio no está dirigido a menores de 13 años. No recopilamos conscientemente datos de menores de 13 años. Si eres padre o tutor y crees que tu hijo nos ha proporcionado datos personales, contáctanos para solicitar su eliminación.</p>
+
+      <h3>8. Retención de Datos</h3>
+      <p>Conservamos tus datos mientras tu cuenta esté activa o según sea necesario para proporcionarte el Servicio. Si solicitas la eliminación de tu cuenta, eliminaremos tus datos personales en un plazo de 30 días, salvo aquellos que debamos conservar por obligaciones legales.</p>
+
+      <h3>9. Cambios a esta Política</h3>
+      <p>Podemos actualizar esta Política de Privacidad ocasionalmente. Publicaremos la versión actualizada en esta página con la nueva fecha. Te recomendamos revisar esta política periódicamente.</p>
+
+      <h3>10. Contacto</h3>
+      <p>Para consultas sobre privacidad o protección de datos, puedes contactarnos a través de nuestros canales oficiales disponibles en la plataforma.</p>
     </div>
   </div>
 </div>
