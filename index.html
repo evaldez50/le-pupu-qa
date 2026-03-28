@@ -35,7 +35,7 @@
       <div class="landing-nav-logo-text">Le Pupu <span>Le Guagua</span></div>
     </div>
     <div class="landing-nav-right">
-      <button class="landing-nav-enter" onclick="showScreen('home')">Entrar</button>
+      <button class="landing-nav-enter" onclick="window.appUser?.session ? showScreen('home') : loginWithGoogle()">Iniciar sesión</button>
       <button class="landing-nav-cta" onclick="showScreen('home')">🚀 Empezar gratis</button>
     </div>
   </nav>
@@ -408,6 +408,7 @@
 
   <!-- Topbar -->
   <div class="topbar">
+    <button class="topbar-back" onclick="showScreen('landing')">← Volver</button>
     <div class="topbar-logo" onclick="showScreen('landing')">
       <svg width="30" height="30" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
         <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
