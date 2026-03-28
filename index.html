@@ -19,10 +19,16 @@
   <meta name="twitter:description" content="Practica las 4 habilidades del TEF Canadá con ejercicios interactivos. Desde nivel A1 gratis.">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Ccircle cx='80' cy='80' r='76' fill='%234ADE80'/%3E%3Ccircle cx='62' cy='68' r='10' fill='white'/%3E%3Ccircle cx='98' cy='68' r='10' fill='white'/%3E%3Ccircle cx='64' cy='69' r='6' fill='%231F2937'/%3E%3Ccircle cx='100' cy='69' r='6' fill='%231F2937'/%3E%3Cpath d='M64 88Q80 98 96 88' stroke='%231F2937' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='73' cy='44' rx='28' ry='18' fill='%230055A4'/%3E%3Ccircle cx='62' cy='28' r='5' fill='%23EF4135'/%3E%3C/svg%3E">
   <link rel="canonical" href="https://evaldez50.github.io/le-pupu-qa/">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Le Pupu">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Ccircle cx='80' cy='80' r='76' fill='%234ADE80'/%3E%3Ccircle cx='62' cy='68' r='10' fill='white'/%3E%3Ccircle cx='98' cy='68' r='10' fill='white'/%3E%3Ccircle cx='64' cy='69' r='6' fill='%231F2937'/%3E%3Ccircle cx='100' cy='69' r='6' fill='%231F2937'/%3E%3Cpath d='M64 88Q80 98 96 88' stroke='%231F2937' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='73' cy='44' rx='28' ry='18' fill='%230055A4'/%3E%3Ccircle cx='62' cy='28' r='5' fill='%23EF4135'/%3E%3C/svg%3E">
   <script type="module" crossorigin src="./assets/index-C03ObVeJ.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-CH2eyl1P.css">
 </head>
 <body>
+<a href="#screen-landing" class="skip-link">Saltar al contenido</a>
 <div id="transitionOverlay"></div>
 
 <!-- Onboarding overlay (primera visita) -->
@@ -65,7 +71,7 @@
 <div id="app-toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;padding:12px 24px;border-radius:12px;font-size:.9rem;font-weight:600;z-index:10000;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;max-width:90%;"></div>
 
 <!-- ═══════ SCREEN: LANDING ═══════ -->
-<div id="screen-landing" class="screen active">
+<div id="screen-landing" class="screen active" role="main" aria-label="Página principal">
 
   <!-- Sticky nav -->
   <nav class="landing-nav">
@@ -573,8 +579,14 @@
       <p>Elige una opción para continuar tu preparación para el TEF Canadá</p>
     </div>
 
+    <!-- Streak badge -->
+    <div id="homeStreakBadge" class="home-streak-badge" style="display:none"></div>
+
     <!-- Progress summary -->
     <div id="homeProgressPanel" class="home-progress-panel" style="display:none"></div>
+
+    <!-- Wrong answer review -->
+    <div id="homeWrongReview" style="display:none"></div>
 
     <!-- 4 action cards -->
     <div class="hub-grid">
@@ -621,6 +633,16 @@
         <button class="home-level-pill c1" onclick="selectLevel('C1')">C1 Autonome</button>
         <button class="home-level-pill c2" onclick="selectLevel('C2')">C2 Maîtrise</button>
       </div>
+    </div>
+
+    <!-- Badges panel -->
+    <div id="homeBadgesPanel" style="display:none"></div>
+
+    <!-- Secondary actions -->
+    <div class="hub-secondary-actions">
+      <button class="hub-secondary-btn" onclick="showReferralModal()">🎁 Invitar amigos</button>
+      <button class="hub-secondary-btn" onclick="_sfxToggleMute()">🔊 Sonidos</button>
+      <button class="hub-secondary-btn" onclick="exportProgress()">📄 Exportar progreso</button>
     </div>
 
   </div>
@@ -777,6 +799,7 @@
       </div>
     </div>
     <div id="resultsTipCard"></div>
+    <div id="resultsScarcity" class="results-scarcity" style="display:none"></div>
     <div id="resultsUpgradeNudge" style="display:none"></div>
     <div id="resultsShareRow" class="results-share-row">
       <button class="btn btn-share" onclick="shareResult()">📤 Compartir mi resultado</button>
@@ -805,6 +828,7 @@
       <div class="history-hero-icon">📈</div>
       <div class="history-hero-title">Historial de Resultados</div>
       <div class="history-hero-sub">Seguimiento de tu avance en el TEF Canadá</div>
+      <button class="btn btn-ghost" style="margin-top:.75rem" onclick="exportProgress()">📄 Exportar mi progreso</button>
     </div>
     <div class="history-stats-row" id="historyStatsRow"></div>
     <div id="historyList"></div>
@@ -905,6 +929,31 @@
         ¿Ya tienes cuenta? Iniciar sesión
       </button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: EMAIL CAPTURE ═══════ -->
+<div id="emailCaptureModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div class="email-capture-card">
+    <button class="email-capture-close" onclick="dismissEmailCapture()">&times;</button>
+    <div style="font-size:2rem;margin-bottom:.5rem">📧</div>
+    <h3>Guarda tu progreso</h3>
+    <p>Ingresa tu email para recibir tips gratuitos de francés y preparación TEF.</p>
+    <input type="email" id="emailCaptureInput" class="email-capture-input" placeholder="tu@email.com">
+    <button class="lbtn-primary email-capture-submit" onclick="submitEmailCapture()">Guardar email</button>
+    <button class="email-capture-skip" onclick="dismissEmailCapture()">Ahora no</button>
+  </div>
+</div>
+
+<!-- ═══════ MODAL: REFERIDOS ═══════ -->
+<div id="referralModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div class="referral-card">
+    <button class="referral-close" onclick="document.getElementById('referralModal').style.display='none'">&times;</button>
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🎁</div>
+    <h3>Invita a tus amigos</h3>
+    <p>Comparte Le Pupu Le Guagua con otros hispanohablantes que se preparan para el TEF Canadá.</p>
+    <button class="lbtn-primary referral-copy-btn" onclick="copyReferralLink()">📋 Copiar link de invitación</button>
+    <button class="referral-dismiss" onclick="document.getElementById('referralModal').style.display='none'">Cerrar</button>
   </div>
 </div>
 

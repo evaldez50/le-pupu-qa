@@ -127,3 +127,38 @@ body.dark-mode .btn-share{background:var(--dm-surface2)!important;color:var(--dm
 body.dark-mode .dark-mode-toggle{border-color:var(--dm-border)!important}
 body.dark-mode .landing-stats-item{background:rgba(30,41,59,.8)!important;color:var(--dm-text)!important}
 body.dark-mode .landing-stats-item span:last-child{color:var(--dm-text2)!important}
+
+/* ── Skip Link (Accessibility) ── */
+.skip-link{position:absolute;top:-100px;left:0;background:#0055A4;color:#fff;padding:.5rem 1rem;z-index:99999;font-size:.9rem;border-radius:0 0 8px 0;transition:top .2s}.skip-link:focus{top:0}
+
+/* ── Streak Badge ── */
+.home-streak-badge{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:0 auto .75rem;padding:.5rem 1.25rem;border-radius:50px;background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fbbf24;max-width:300px}.streak-fire{font-size:1.3rem}.streak-count{font-size:1.4rem;font-weight:900;color:#b45309}.streak-label{font-size:.85rem;color:#92400e;font-weight:600}
+
+/* ── Wrong Review Card ── */
+.wrong-review-card{display:flex;align-items:center;gap:1rem;margin:0 auto .75rem;max-width:600px;padding:.85rem 1.25rem;background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5;border-radius:12px;cursor:pointer;transition:transform .2s}.wrong-review-card:hover{transform:translateY(-2px)}.wrong-review-icon{font-size:1.5rem}.wrong-review-body{flex:1}.wrong-review-body strong{display:block;color:#991b1b;font-size:.9rem}.wrong-review-body span{color:#b91c1c;font-size:.8rem}
+
+/* ── Badges Panel ── */
+.badges-header{font-size:.9rem;font-weight:700;color:#1e293b;margin-bottom:.6rem;text-align:center}.badges-grid{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:1rem auto;max-width:600px}.badge-item{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.5rem;border-radius:10px;min-width:70px;text-align:center;transition:transform .2s}.badge-item.unlocked{background:#f0fdf4;border:1px solid #86efac}.badge-item.locked{background:#f8fafc;border:1px solid #e2e8f0;opacity:.5}.badge-icon{font-size:1.4rem}.badge-name{font-size:.65rem;font-weight:600;color:#334155;line-height:1.2}
+
+/* ── Hub Secondary Actions ── */
+.hub-secondary-actions{display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;margin:1rem auto;max-width:600px}.hub-secondary-btn{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:.4rem .85rem;font-size:.8rem;font-weight:600;color:#475569;cursor:pointer;transition:all .2s}.hub-secondary-btn:hover{background:#e2e8f0;border-color:#cbd5e1}
+
+/* ── Scarcity Text ── */
+.results-scarcity{text-align:center;font-size:.82rem;color:#64748b;padding:.4rem 0;margin-top:.5rem}
+
+/* ── Email Capture Modal ── */
+.email-capture-card{background:#fff;border-radius:16px;padding:2rem;max-width:380px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative}.email-capture-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer}.email-capture-card h3{font-size:1.15rem;color:#1e293b;margin:.25rem 0 .5rem}.email-capture-card p{color:#64748b;font-size:.88rem;margin-bottom:1rem;line-height:1.5}.email-capture-input{width:100%;padding:.7rem 1rem;border:1.5px solid #e2e8f0;border-radius:8px;font-size:.95rem;margin-bottom:.75rem;outline:none;transition:border-color .2s}.email-capture-input:focus{border-color:#0055A4}.email-capture-submit{width:100%;padding:.75rem;border-radius:10px;font-size:.95rem}.email-capture-skip{background:none;border:none;color:#94a3b8;font-size:.82rem;cursor:pointer;margin-top:.5rem;padding:4px}
+
+/* ── Referral Modal ── */
+.referral-card{background:#fff;border-radius:16px;padding:2rem;max-width:380px;width:92%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative}.referral-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer}.referral-card h3{font-size:1.15rem;color:#1e293b;margin:.25rem 0 .5rem}.referral-card p{color:#64748b;font-size:.88rem;margin-bottom:1.25rem;line-height:1.5}.referral-copy-btn{width:100%;padding:.75rem;border-radius:10px;font-size:.95rem;margin-bottom:.5rem}.referral-dismiss{background:none;border:none;color:#94a3b8;font-size:.82rem;cursor:pointer;padding:4px}
+
+/* ── Dark mode additions for new components ── */
+body.dark-mode .home-streak-badge{background:linear-gradient(135deg,#451a03,#78350f)!important;border-color:#92400e!important}.dark-mode .streak-count{color:#fbbf24!important}.dark-mode .streak-label{color:#fde68a!important}
+body.dark-mode .wrong-review-card{background:var(--dm-surface)!important;border-color:#7f1d1d!important}.dark-mode .wrong-review-body strong{color:#fca5a5!important}.dark-mode .wrong-review-body span{color:#f87171!important}
+body.dark-mode .badge-item.unlocked{background:var(--dm-surface)!important;border-color:#15803d!important}.dark-mode .badge-item.locked{background:var(--dm-surface2)!important;border-color:var(--dm-border)!important}.dark-mode .badge-name{color:var(--dm-text2)!important}.dark-mode .badges-header{color:var(--dm-text)!important}
+body.dark-mode .hub-secondary-btn{background:var(--dm-surface)!important;border-color:var(--dm-border)!important;color:var(--dm-text)!important}
+body.dark-mode .email-capture-card,body.dark-mode .referral-card{background:var(--dm-surface)!important;color:var(--dm-text)!important}
+body.dark-mode .email-capture-card h3,body.dark-mode .referral-card h3{color:var(--dm-text)!important}
+body.dark-mode .email-capture-card p,body.dark-mode .referral-card p{color:var(--dm-text2)!important}
+body.dark-mode .email-capture-input{background:var(--dm-surface2)!important;border-color:var(--dm-border)!important;color:var(--dm-text)!important}
+body.dark-mode .results-scarcity{color:var(--dm-text2)!important}
