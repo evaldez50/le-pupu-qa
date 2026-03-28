@@ -6,12 +6,58 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>Le Pupu Le Guagua – Aprende Francés</title>
+  <title>Le Pupu Le Guagua – Aprende Francés para el TEF Canadá</title>
+  <meta name="description" content="Plataforma de práctica para hispanohablantes que se preparan para el TEF Canadá. Comprensión oral, escrita, expresión oral, escrita y conjugador interactivo. Niveles A1–C2.">
+  <meta name="theme-color" content="#0055A4">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Le Pupu Le Guagua – Aprende Francés para el TEF Canadá">
+  <meta property="og:description" content="Practica las 4 habilidades del TEF Canadá con ejercicios interactivos. Desde nivel A1 gratis. Hecho para hispanohablantes.">
+  <meta property="og:image" content="https://evaldez50.github.io/le-pupu-qa/assets/og-image.png">
+  <meta property="og:url" content="https://evaldez50.github.io/le-pupu-qa/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Le Pupu Le Guagua – Aprende Francés para el TEF Canadá">
+  <meta name="twitter:description" content="Practica las 4 habilidades del TEF Canadá con ejercicios interactivos. Desde nivel A1 gratis.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Ccircle cx='80' cy='80' r='76' fill='%234ADE80'/%3E%3Ccircle cx='62' cy='68' r='10' fill='white'/%3E%3Ccircle cx='98' cy='68' r='10' fill='white'/%3E%3Ccircle cx='64' cy='69' r='6' fill='%231F2937'/%3E%3Ccircle cx='100' cy='69' r='6' fill='%231F2937'/%3E%3Cpath d='M64 88Q80 98 96 88' stroke='%231F2937' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='73' cy='44' rx='28' ry='18' fill='%230055A4'/%3E%3Ccircle cx='62' cy='28' r='5' fill='%23EF4135'/%3E%3C/svg%3E">
+  <link rel="canonical" href="https://evaldez50.github.io/le-pupu-qa/">
   <script type="module" crossorigin src="./assets/index-C03ObVeJ.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-CH2eyl1P.css">
 </head>
 <body>
 <div id="transitionOverlay"></div>
+
+<!-- Onboarding overlay (primera visita) -->
+<div id="onboardingOverlay" class="onboarding-overlay" style="display:none">
+  <div class="onboarding-card">
+    <div class="onboarding-mascot">
+      <svg width="64" height="64" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
+        <circle cx="62" cy="68" r="10" fill="white"/><circle cx="98" cy="68" r="10" fill="white"/>
+        <circle cx="64" cy="69" r="6" fill="#1F2937"/><circle cx="100" cy="69" r="6" fill="#1F2937"/>
+        <circle cx="67" cy="66" r="3" fill="white"/><circle cx="103" cy="66" r="3" fill="white"/>
+        <path d="M 64 88 Q 80 98 96 88" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="73" cy="44" rx="28" ry="18" fill="#0055A4"/>
+        <circle cx="62" cy="28" r="5" fill="#EF4135"/>
+      </svg>
+    </div>
+    <h2>Bienvenue! Tu preparación TEF empieza aquí</h2>
+    <div class="onboarding-steps">
+      <div class="onboarding-step">
+        <span class="onboarding-step-num">1</span>
+        <div><strong>Elige tu nivel</strong><br>Desde A1 (principiante) hasta C2 (maestro). Si no sabes, empieza en A1.</div>
+      </div>
+      <div class="onboarding-step">
+        <span class="onboarding-step-num">2</span>
+        <div><strong>Practica las 4 habilidades</strong><br>CO (escuchar), CE (leer), EO (hablar), EE (escribir) — como en el TEF real.</div>
+      </div>
+      <div class="onboarding-step">
+        <span class="onboarding-step-num">3</span>
+        <div><strong>Revisa tu progreso</strong><br>Después de cada ejercicio verás tu puntuación y las respuestas explicadas.</div>
+      </div>
+    </div>
+    <button class="lbtn-primary onboarding-start-btn" onclick="dismissOnboarding()">Entendido, ¡empezar!</button>
+    <p class="onboarding-hint">El nivel A1 es completamente gratis</p>
+  </div>
+</div>
 <!-- Auth UI global: visible en TODAS las pantallas, posición fija -->
 <div id="auth-ui-global" style="position:fixed;top:10px;right:16px;z-index:9997;"></div>
 
@@ -35,6 +81,7 @@
       <div class="landing-nav-logo-text">Le Pupu <span>Le Guagua</span></div>
     </div>
     <div class="landing-nav-right">
+      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Modo oscuro" title="Modo claro/oscuro">🌙</button>
       <button class="landing-nav-enter" onclick="window.appUser?.session ? showScreen('home') : loginWithGoogle()">Iniciar sesión</button>
       <button class="landing-nav-cta" onclick="showScreen('home')">🚀 Empezar gratis</button>
     </div>
@@ -478,6 +525,7 @@
       <span>·</span>
       <a href="#" onclick="event.preventDefault();document.getElementById('privacy-modal').style.display='flex'">Política de Privacidad</a>
     </div>
+    <div class="landing-footer-contact">📧 <a href="mailto:soporte@lepupuleguagua.com">soporte@lepupuleguagua.com</a></div>
     <div class="landing-footer-copy">© 2025 Le Pupu Le Guagua. Todos los derechos reservados.</div>
   </footer>
 
@@ -524,6 +572,9 @@
       <h2>¿Por dónde empiezas hoy?</h2>
       <p>Elige una opción para continuar tu preparación para el TEF Canadá</p>
     </div>
+
+    <!-- Progress summary -->
+    <div id="homeProgressPanel" class="home-progress-panel" style="display:none"></div>
 
     <!-- 4 action cards -->
     <div class="hub-grid">
@@ -647,6 +698,17 @@
 <!-- ═══════ SCREEN: TEST ═══════ -->
 <div id="screen-test" class="screen">
   <div id="testIntroOverlay" class="test-intro-overlay hidden"></div>
+  <div id="exitTestModal" class="exit-test-modal hidden">
+    <div class="exit-test-card">
+      <div class="exit-test-icon">⚠️</div>
+      <h3>¿Salir del test?</h3>
+      <p>Se perderá tu progreso en este ejercicio.</p>
+      <div class="exit-test-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('exitTestModal').classList.add('hidden')">Continuar test</button>
+        <button class="btn btn-ghost btn-danger" onclick="document.getElementById('exitTestModal').classList.add('hidden');doExitTest()">Salir</button>
+      </div>
+    </div>
+  </div>
   <div class="topbar" id="testTopbar">
     <button class="topbar-back" onclick="confirmExitTest()">← Salir</button>
     <div class="topbar-breadcrumb">
@@ -715,6 +777,10 @@
       </div>
     </div>
     <div id="resultsTipCard"></div>
+    <div id="resultsUpgradeNudge" style="display:none"></div>
+    <div id="resultsShareRow" class="results-share-row">
+      <button class="btn btn-share" onclick="shareResult()">📤 Compartir mi resultado</button>
+    </div>
     <div class="results-review-header">📋 Repaso por pregunta</div>
     <div id="reviewList"></div>
     <div class="results-actions">
@@ -896,7 +962,7 @@
       <p>Estos Términos se rigen por las leyes aplicables en la jurisdicción del usuario. Cualquier disputa se resolverá preferentemente mediante mediación amistosa antes de recurrir a instancias judiciales.</p>
 
       <h3>12. Contacto</h3>
-      <p>Para consultas sobre estos Términos, puedes contactarnos a través de nuestros canales oficiales disponibles en la plataforma.</p>
+      <p>Para consultas sobre estos Términos, puedes contactarnos enviando un correo a <a href="mailto:soporte@lepupuleguagua.com">soporte@lepupuleguagua.com</a>.</p>
     </div>
   </div>
 </div>
@@ -976,7 +1042,7 @@
       <p>Podemos actualizar esta Política de Privacidad ocasionalmente. Publicaremos la versión actualizada en esta página con la nueva fecha. Te recomendamos revisar esta política periódicamente.</p>
 
       <h3>10. Contacto</h3>
-      <p>Para consultas sobre privacidad o protección de datos, puedes contactarnos a través de nuestros canales oficiales disponibles en la plataforma.</p>
+      <p>Para consultas sobre privacidad o protección de datos, puedes contactarnos enviando un correo a <a href="mailto:soporte@lepupuleguagua.com">soporte@lepupuleguagua.com</a>.</p>
     </div>
   </div>
 </div>
