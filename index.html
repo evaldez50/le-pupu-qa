@@ -7,8 +7,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Le Pupu Le Guagua – Aprende Francés</title>
-  <script type="module" crossorigin src="./assets/index-DN2Ji9kE.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CA4jvPJP.css">
+  <script type="module" crossorigin src="./assets/index-DrUCi9p8.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Bf4Dgq92.css">
 </head>
 <body>
 <div id="transitionOverlay"></div>
@@ -165,33 +165,33 @@
       <h2 class="ls-title">Un camino claro del principiante al maestro</h2>
       <p class="ls-sub">Cada nivel está cuidadosamente estructurado con temas y ejercicios específicos para el TEF Canadá.</p>
       <div class="landing-levels-grid">
-        <div class="landing-lvl-card lvl-a1" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-a1" onclick="selectLevel('A1')">
           <span class="landing-lvl-badge">A1</span>
           <span class="landing-lvl-name">Débutant</span>
           <span class="landing-lvl-desc">Fundamentos del francés</span>
           <span class="landing-lvl-free-tag">GRATIS</span>
         </div>
-        <div class="landing-lvl-card lvl-a2" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-a2" onclick="selectLevel('A2')">
           <span class="landing-lvl-badge">A2</span>
           <span class="landing-lvl-name">Élémentaire</span>
           <span class="landing-lvl-desc">Comunicación básica</span>
         </div>
-        <div class="landing-lvl-card lvl-b1" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-b1" onclick="selectLevel('B1')">
           <span class="landing-lvl-badge">B1</span>
           <span class="landing-lvl-name">Intermédiaire</span>
           <span class="landing-lvl-desc">Situaciones cotidianas</span>
         </div>
-        <div class="landing-lvl-card lvl-b2" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-b2" onclick="selectLevel('B2')">
           <span class="landing-lvl-badge">B2</span>
           <span class="landing-lvl-name">Avancé</span>
           <span class="landing-lvl-desc">Fluidez avanzada</span>
         </div>
-        <div class="landing-lvl-card lvl-c1" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-c1" onclick="selectLevel('C1')">
           <span class="landing-lvl-badge">C1</span>
           <span class="landing-lvl-name">Autonome</span>
           <span class="landing-lvl-desc">Dominio experto</span>
         </div>
-        <div class="landing-lvl-card lvl-c2" onclick="showScreen('home')">
+        <div class="landing-lvl-card lvl-c2" onclick="selectLevel('C2')">
           <span class="landing-lvl-badge">C2</span>
           <span class="landing-lvl-name">Maîtrise</span>
           <span class="landing-lvl-desc">Nivel nativo</span>
@@ -225,6 +225,89 @@
           <div class="landing-step-title">Supera el examen</div>
           <div class="landing-step-desc">Llega preparado y confiado al TEF Canadá. Con práctica constante en nuestra plataforma, el examen no será sorpresa.</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Conjugador section ── -->
+  <div class="ls-blue">
+    <div class="ls-inner">
+      <p class="ls-eyebrow">HERRAMIENTA EXCLUSIVA</p>
+      <h2 class="ls-title">🔤 Conjugador Interactivo</h2>
+      <p class="ls-sub">La forma más efectiva de dominar los verbos franceses — practica con corrección automática en tiempo real y sigue tu puntuación sesión a sesión.</p>
+      <div class="landing-conj-grid">
+
+        <!-- Feature list -->
+        <div class="landing-conj-features">
+          <div class="landing-conj-item">
+            <span class="landing-conj-check">✓</span>
+            <div>
+              <strong>140+ verbos organizados por grupo</strong>
+              <span>Groupe 1 (-ER), Groupe 2 (-IR), Groupe 3 (-RE) y todos los irregulares</span>
+            </div>
+          </div>
+          <div class="landing-conj-item">
+            <span class="landing-conj-check">✓</span>
+            <div>
+              <strong>10 tiempos verbales completos</strong>
+              <span>Présent, passé composé, imparfait, futur simple, conditionnel, subjonctif y más</span>
+            </div>
+          </div>
+          <div class="landing-conj-item">
+            <span class="landing-conj-check">✓</span>
+            <div>
+              <strong>Corrección automática con feedback</strong>
+              <span>Cada respuesta se evalúa al instante con la forma correcta y la traducción al español</span>
+            </div>
+          </div>
+          <div class="landing-conj-item">
+            <span class="landing-conj-check">✓</span>
+            <div>
+              <strong>Groupe 1 (-ER) completamente gratis</strong>
+              <span>Verbos como parler, aimer, manger — sin registro, sin límite</span>
+            </div>
+          </div>
+          <button class="lbtn-primary" style="margin-top:28px;align-self:flex-start;" onclick="showScreen('conjugador')">
+            🔤 Ir al conjugador →
+          </button>
+        </div>
+
+        <!-- Visual mock of conjugador UI -->
+        <div class="landing-conj-preview">
+          <div class="landing-conj-mock">
+            <div class="lcm-header">
+              <span class="lcm-verb">finir</span>
+              <span class="lcm-tense">Présent</span>
+            </div>
+            <div class="lcm-sentence">Il faut que tu <em>finisses</em> le cours.</div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">je</span>
+              <span class="lcm-answer correct">finis ✓</span>
+            </div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">tu</span>
+              <span class="lcm-answer correct">finis ✓</span>
+            </div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">il/elle</span>
+              <span class="lcm-answer typing">finit_</span>
+            </div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">nous</span>
+              <span class="lcm-answer pending">___</span>
+            </div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">vous</span>
+              <span class="lcm-answer pending">___</span>
+            </div>
+            <div class="lcm-row">
+              <span class="lcm-pronoun">ils/elles</span>
+              <span class="lcm-answer pending">___</span>
+            </div>
+            <div class="lcm-score">⭐ 12 pts · 2/6 correctas</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -318,64 +401,95 @@
 
 </div>
 
-<!-- ═══════ SCREEN: HOME ═══════ -->
+<!-- ═══════ SCREEN: HOME — HUB DE NAVEGACIÓN ═══════ -->
 <div id="screen-home" class="screen">
+  <!-- Oculto para compatibilidad con createStars() en main.js -->
   <div class="star-field" id="starField"></div>
-  <div class="home-inner">
-    <div class="flag-ribbon"><div class="fr-blue"></div><div class="fr-white"></div><div class="fr-red"></div></div>
-    <div class="logo-wrap">
-      <svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="80" cy="150" rx="40" ry="8" fill="rgba(0,0,0,.25)"/>
-        <ellipse cx="80" cy="105" rx="42" ry="38" fill="#4ADE80"/>
-        <ellipse cx="80" cy="112" rx="28" ry="24" fill="#BBF7D0"/>
-        <ellipse cx="42" cy="110" rx="12" ry="8" fill="#4ADE80" transform="rotate(-25,42,110)"/>
-        <ellipse cx="118" cy="110" rx="12" ry="8" fill="#4ADE80" transform="rotate(25,118,110)"/>
-        <ellipse cx="57" cy="137" rx="14" ry="9" fill="#4ADE80" transform="rotate(-15,57,137)"/>
-        <ellipse cx="103" cy="137" rx="14" ry="9" fill="#4ADE80" transform="rotate(15,103,137)"/>
-        <circle cx="80" cy="74" r="38" fill="#4ADE80"/>
-        <circle cx="62" cy="60" r="13" fill="white"/><circle cx="98" cy="60" r="13" fill="white"/>
-        <circle cx="64" cy="61" r="8" fill="#1F2937"/><circle cx="100" cy="61" r="8" fill="#1F2937"/>
-        <circle cx="67" cy="58" r="3" fill="white"/><circle cx="103" cy="58" r="3" fill="white"/>
-        <circle cx="75" cy="74" r="3.5" fill="#22C55E"/><circle cx="85" cy="74" r="3.5" fill="#22C55E"/>
-        <path d="M 64 83 Q 80 94 96 83" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo" onclick="showScreen('landing')">
+      <svg width="30" height="30" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
+        <circle cx="62" cy="68" r="10" fill="white"/><circle cx="98" cy="68" r="10" fill="white"/>
+        <circle cx="64" cy="69" r="6" fill="#1F2937"/><circle cx="100" cy="69" r="6" fill="#1F2937"/>
+        <path d="M 64 88 Q 80 98 96 88" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="73" cy="44" rx="28" ry="18" fill="#0055A4"/>
+        <circle cx="62" cy="28" r="5" fill="#EF4135"/>
+      </svg>
+      <div><div class="topbar-logo-text">Le Pupu <span>Le Guagua</span></div></div>
+    </div>
+    <div class="topbar-breadcrumb"><span class="active-crumb">¿Qué practicas hoy?</span></div>
+  </div>
+
+  <!-- Hub content -->
+  <div class="hub-wrap">
+
+    <!-- Header -->
+    <div class="hub-header">
+      <svg class="hub-header-mascot" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="80" cy="80" r="76" fill="#4ADE80"/>
+        <circle cx="62" cy="68" r="10" fill="white"/><circle cx="98" cy="68" r="10" fill="white"/>
+        <circle cx="64" cy="69" r="6" fill="#1F2937"/><circle cx="100" cy="69" r="6" fill="#1F2937"/>
+        <circle cx="67" cy="66" r="3" fill="white"/><circle cx="103" cy="66" r="3" fill="white"/>
+        <path d="M 64 88 Q 80 98 96 88" stroke="#1F2937" stroke-width="3" fill="none" stroke-linecap="round"/>
         <ellipse cx="52" cy="78" rx="9" ry="6" fill="#FCA5A5" opacity=".5"/>
         <ellipse cx="108" cy="78" rx="9" ry="6" fill="#FCA5A5" opacity=".5"/>
-        <ellipse cx="80" cy="39" rx="26" ry="6" fill="#1E3A5F"/>
-        <ellipse cx="73" cy="30" rx="30" ry="20" fill="#0055A4"/>
-        <ellipse cx="69" cy="26" rx="14" ry="9" fill="rgba(255,255,255,.15)"/>
-        <circle cx="62" cy="14" r="5" fill="#EF4135"/>
-        <text x="82" y="36" font-size="9" fill="#FFD166" text-anchor="middle">★</text>
+        <ellipse cx="73" cy="44" rx="28" ry="18" fill="#0055A4"/>
+        <circle cx="62" cy="28" r="5" fill="#EF4135"/>
       </svg>
+      <h2>¿Por dónde empiezas hoy?</h2>
+      <p>Elige una opción para continuar tu preparación para el TEF Canadá</p>
     </div>
-    <h1 class="home-title">Le Pupu<br><span class="accent">Le Guagua</span></h1>
-    <p class="home-tagline">Domina el francés para el TEF Canadá · Du débutant au maître 🇫🇷</p>
-    <div class="home-stats">
-      <div class="home-stat"><span class="home-stat-num">6</span><span class="home-stat-label">Niveles</span></div>
-      <div class="home-stat"><span class="home-stat-num">4</span><span class="home-stat-label">Habilidades</span></div>
-      <div class="home-stat"><span class="home-stat-num">1,230+</span><span class="home-stat-label">Ejercicios</span></div>
-      <div class="home-stat"><span class="home-stat-num">TEF</span><span class="home-stat-label">Certificado</span></div>
+
+    <!-- 4 action cards -->
+    <div class="hub-grid">
+
+      <div class="hub-card hub-blue" onclick="showScreen('levels')">
+        <span class="hub-card-icon">🎯</span>
+        <div class="hub-card-title">Practicar por nivel</div>
+        <div class="hub-card-desc">Selecciona A1–C2 y entrena las 4 habilidades TEF: CO, CE, EO y EE</div>
+        <span class="hub-card-arrow">→</span>
+      </div>
+
+      <div class="hub-card hub-green" onclick="showScreen('history')">
+        <span class="hub-card-icon">📊</span>
+        <div class="hub-card-title">Mi progreso</div>
+        <div class="hub-card-desc">Revisa tu historial de sesiones y estadísticas de avance</div>
+        <span class="hub-hist-badge" id="historyBadge" style="display:none">0</span>
+        <span class="hub-card-arrow">→</span>
+      </div>
+
+      <div class="hub-card hub-orange" onclick="showScreen('temario')">
+        <span class="hub-card-icon">📚</span>
+        <div class="hub-card-title">Temario TEF Canadá</div>
+        <div class="hub-card-desc">Explora los temas específicos del examen, organizados por nivel</div>
+        <span class="hub-card-arrow">→</span>
+      </div>
+
+      <div class="hub-card hub-purple" onclick="showScreen('conjugador')">
+        <span class="hub-card-icon">🔤</span>
+        <div class="hub-card-title">Conjugador interactivo</div>
+        <div class="hub-card-desc">Practica 140+ verbos en 10 tiempos con corrección automática</div>
+        <span class="hub-card-arrow">→</span>
+      </div>
+
     </div>
-    <div class="home-cta-group">
-      <button class="btn btn-red btn-lg" onclick="showScreen('levels')">🚀 Commencer maintenant</button>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <div class="home-prog-btn-wrap">
-          <button class="btn btn-ghost btn-lg" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.25);" onclick="showScreen('history')">📊 Ver mi progreso</button>
-          <span class="history-prog-badge" id="historyBadge" style="display:none">0</span>
-        </div>
-        <button class="btn btn-ghost btn-lg" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.25);" onclick="showScreen('temario')">📚 Temario</button>
-        <button class="btn btn-ghost btn-lg" style="color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.25);" onclick="showScreen('conjugador')">🔤 Conjugador</button>
+
+    <!-- Level quick-select -->
+    <div class="hub-levels-wrap">
+      <div class="hub-levels-label">Acceso rápido por nivel</div>
+      <div class="home-level-strip">
+        <button class="home-level-pill a1" onclick="selectLevel('A1')">A1 Débutant</button>
+        <button class="home-level-pill a2" onclick="selectLevel('A2')">A2 Élémentaire</button>
+        <button class="home-level-pill b1" onclick="selectLevel('B1')">B1 Intermédiaire</button>
+        <button class="home-level-pill b2" onclick="selectLevel('B2')">B2 Avancé</button>
+        <button class="home-level-pill c1" onclick="selectLevel('C1')">C1 Autonome</button>
+        <button class="home-level-pill c2" onclick="selectLevel('C2')">C2 Maîtrise</button>
       </div>
     </div>
-    <div class="home-level-strip">
-      <button class="home-level-pill a1" onclick="selectLevel('A1')">A1 Débutant</button>
-      <button class="home-level-pill a2" onclick="selectLevel('A2')">A2 Élémentaire</button>
-      <button class="home-level-pill b1" onclick="selectLevel('B1')">B1 Intermédiaire</button>
-      <button class="home-level-pill b2" onclick="selectLevel('B2')">B2 Avancé</button>
-      <button class="home-level-pill c1" onclick="selectLevel('C1')">C1 Autonome</button>
-      <button class="home-level-pill c2" onclick="selectLevel('C2')">C2 Maîtrise</button>
-    </div>
+
   </div>
-  <div class="scroll-hint"><span>Selecciona un nivel</span><span>▼</span></div>
 </div>
 
 <!-- ═══════ SCREEN: LEVELS ═══════ -->
