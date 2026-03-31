@@ -1,0 +1,20 @@
+{
+  "name": "Le Pupu Le Guagua — Aprende Francés para el TEF Canadá",
+  "short_name": "Le Pupu",
+  "description": "Practica las 4 habilidades del TEF Canadá con ejercicios interactivos. Hecho para hispanohablantes.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0055A4",
+  "orientation": "portrait-primary",
+  "categories": ["education"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Ccircle cx='80' cy='80' r='76' fill='%234ADE80'/%3E%3Ccircle cx='62' cy='68' r='10' fill='white'/%3E%3Ccircle cx='98' cy='68' r='10' fill='white'/%3E%3Ccircle cx='64' cy='69' r='6' fill='%231F2937'/%3E%3Ccircle cx='100' cy='69' r='6' fill='%231F2937'/%3E%3Cpath d='M64 88Q80 98 96 88' stroke='%231F2937' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3Cellipse cx='73' cy='44' rx='28' ry='18' fill='%230055A4'/%3E%3Ccircle cx='62' cy='28' r='5' fill='%23EF4135'/%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
