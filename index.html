@@ -388,19 +388,6 @@
     </div>
   </div>
 
-  <!-- ── Final CTA ── -->
-  <div class="landing-cta-final">
-    <div class="lcta-inner">
-      <h2>¿Listo para el <span>TEF Canadá</span>?</h2>
-      <p>Únete ahora y empieza a practicar con el nivel A1 completamente gratis. Sin tarjeta de crédito, sin compromisos.</p>
-      <button class="lbtn-primary" onclick="showScreen('home')">🚀 Empezar ahora — es gratis</button>
-      <div class="landing-cta-final-trust">
-        <span>Nivel A1 sin registro</span>
-        <span>Sin tarjeta de crédito</span>
-        <span>Sin anuncios</span>
-      </div>
-    </div>
-  </div>
 
   <!-- ── FAQ ── -->
   <div class="ls-white">
@@ -437,30 +424,16 @@
     </div>
   </div>
 
-  <!-- ── Términos, Privacidad y Legal ── -->
-  <div class="ls-gray">
-    <div class="ls-inner">
-      <p class="ls-eyebrow">LEGAL</p>
-      <h2 class="ls-title">Términos y Condiciones</h2>
-      <div class="landing-legal">
-        <h3>Descripción del Servicio</h3>
-        <p>Le Pupu Le Guagua es una plataforma de práctica y preparación para el examen TEF Canadá dirigida a hispanohablantes. No somos una institución certificadora, no otorgamos certificados ni diplomas, y no estamos afiliados oficialmente con la CCI. El nivel A1 está disponible de forma gratuita sin necesidad de registro; los niveles A2–C2 y funcionalidades premium requieren una cuenta y un pago único.</p>
-        <h3>Limitación de Responsabilidad</h3>
-        <p>Le Pupu Le Guagua no garantiza resultados específicos en el examen TEF Canadá. Los resultados dependen del esfuerzo, dedicación y nivel previo de cada usuario. No otorgamos certificados, diplomas ni acreditaciones oficiales.</p>
-        <h3>Uso de la Cuenta y Autenticación</h3>
-        <p>Para acceder a funcionalidades premium, utilizamos Google OAuth como método de autenticación. Solo almacenamos tu nombre, correo electrónico y foto de perfil proporcionados por Google, con el único fin de identificar tu cuenta y gestionar tu acceso. No compartimos tus datos con terceros ni los utilizamos con fines publicitarios.</p>
-        <h3>Pagos</h3>
-        <p>Los pagos se procesan de forma segura a través de Stripe. No almacenamos datos de tarjetas de crédito ni información financiera en nuestros servidores. Al tratarse de un producto digital de acceso inmediato, todas las ventas son finales. Para consultas sobre tu compra, escribe a info@sci-mexico.net.</p>
-
-        <h3>Política de Privacidad</h3>
-        <p><strong>Datos que recopilamos:</strong> nombre, correo electrónico y foto de perfil (vía Google OAuth); historial de progreso y puntuaciones dentro de la plataforma.</p>
-        <p><strong>Cómo los usamos:</strong> exclusivamente para el funcionamiento de la plataforma — identificar tu cuenta, guardar tu progreso y gestionar tu acceso premium.</p>
-        <p><strong>Almacenamiento:</strong> tus datos se almacenan en Supabase (infraestructura de AWS) con cifrado en tránsito y en reposo.</p>
-        <p><strong>Terceros:</strong> no vendemos, compartimos ni cedemos tus datos personales a terceros. Los únicos servicios externos que reciben datos son Google (autenticación) y Stripe (procesamiento de pagos), bajo sus respectivas políticas de privacidad.</p>
-        <p><strong>Tus derechos:</strong> puedes solicitar la eliminación de tu cuenta y todos tus datos asociados escribiendo a info@sci-mexico.net.</p>
-        <p><strong>Cookies:</strong> esta plataforma utiliza almacenamiento local del navegador (localStorage) para guardar tu progreso y preferencias. No utilizamos cookies de seguimiento ni de publicidad.</p>
-
-        <p style="margin-top:1.2rem;font-size:.82rem;color:#888;">Al utilizar Le Pupu Le Guagua, aceptas estos términos. Para cualquier consulta: info@sci-mexico.net</p>
+  <!-- ── Final CTA ── -->
+  <div class="landing-cta-final">
+    <div class="lcta-inner">
+      <h2>¿Listo para el <span>TEF Canadá</span>?</h2>
+      <p>Únete ahora y empieza a practicar con el nivel A1 completamente gratis. Sin tarjeta de crédito, sin compromisos.</p>
+      <button class="lbtn-primary" onclick="showScreen('home')">🚀 Empezar ahora — es gratis</button>
+      <div class="landing-cta-final-trust">
+        <span>Nivel A1 sin registro</span>
+        <span>Sin tarjeta de crédito</span>
+        <span>Sin anuncios</span>
       </div>
     </div>
   </div>
@@ -482,9 +455,9 @@
       Alineado con el examen TEF Canadá · Marco CEFR A1–C2 · Hecho con ❤️ para hispanohablantes
     </div>
     <div class="landing-footer-links">
-      <a href="#" onclick="document.querySelector('.landing-legal').scrollIntoView({behavior:'smooth'});return false;">Términos y Condiciones</a>
+      <a href="#" onclick="document.getElementById('legal-modal').style.display='flex';return false;">Términos y Condiciones</a>
       <span>·</span>
-      <a href="#" onclick="document.querySelector('.landing-legal').scrollIntoView({behavior:'smooth'});return false;">Política de Privacidad</a>
+      <a href="#" onclick="document.getElementById('legal-modal').style.display='flex';document.getElementById('legal-modal-content').scrollTop=0;var el=document.getElementById('privacy-section');if(el)setTimeout(function(){el.scrollIntoView()},100);return false;">Política de Privacidad</a>
     </div>
     <div class="landing-footer-contact">
       <span>✉ info@sci-mexico.net</span>
@@ -494,6 +467,32 @@
     </div>
   </footer>
 
+</div>
+
+<!-- Modal Legal (oculto, se abre desde footer) -->
+<div id="legal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+  <div id="legal-modal-content" style="background:#fff;border-radius:16px;padding:2rem 2.5rem;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;">
+    <button onclick="document.getElementById('legal-modal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#888;">✕</button>
+    <h2 style="font-size:1.3rem;font-weight:800;color:#1a1a2e;margin:0 0 20px;">Términos y Condiciones</h2>
+    <div class="landing-legal">
+      <h3>Descripción del Servicio</h3>
+      <p>Le Pupu Le Guagua es una plataforma de práctica y preparación para el examen TEF Canadá dirigida a hispanohablantes. No somos una institución certificadora, no otorgamos certificados ni diplomas, y no estamos afiliados oficialmente con la CCI. El nivel A1 está disponible de forma gratuita sin necesidad de registro; los niveles A2–C2 y funcionalidades premium requieren una cuenta y un pago único.</p>
+      <h3>Limitación de Responsabilidad</h3>
+      <p>Le Pupu Le Guagua no garantiza resultados específicos en el examen TEF Canadá. Los resultados dependen del esfuerzo, dedicación y nivel previo de cada usuario. No otorgamos certificados, diplomas ni acreditaciones oficiales.</p>
+      <h3>Uso de la Cuenta y Autenticación</h3>
+      <p>Para acceder a funcionalidades premium, utilizamos Google OAuth como método de autenticación. Solo almacenamos tu nombre, correo electrónico y foto de perfil proporcionados por Google, con el único fin de identificar tu cuenta y gestionar tu acceso. No compartimos tus datos con terceros ni los utilizamos con fines publicitarios.</p>
+      <h3>Pagos</h3>
+      <p>Los pagos se procesan de forma segura a través de Stripe. No almacenamos datos de tarjetas de crédito ni información financiera en nuestros servidores. Al tratarse de un producto digital de acceso inmediato, todas las ventas son finales. Para consultas sobre tu compra, escribe a info@sci-mexico.net.</p>
+      <h3 id="privacy-section">Política de Privacidad</h3>
+      <p><strong>Datos que recopilamos:</strong> nombre, correo electrónico y foto de perfil (vía Google OAuth); historial de progreso y puntuaciones dentro de la plataforma.</p>
+      <p><strong>Cómo los usamos:</strong> exclusivamente para el funcionamiento de la plataforma — identificar tu cuenta, guardar tu progreso y gestionar tu acceso premium.</p>
+      <p><strong>Almacenamiento:</strong> tus datos se almacenan en Supabase (infraestructura de AWS) con cifrado en tránsito y en reposo.</p>
+      <p><strong>Terceros:</strong> no vendemos, compartimos ni cedemos tus datos personales a terceros. Los únicos servicios externos que reciben datos son Google (autenticación) y Stripe (procesamiento de pagos), bajo sus respectivas políticas de privacidad.</p>
+      <p><strong>Tus derechos:</strong> puedes solicitar la eliminación de tu cuenta y todos tus datos asociados escribiendo a info@sci-mexico.net.</p>
+      <p><strong>Cookies:</strong> esta plataforma utiliza almacenamiento local del navegador (localStorage) para guardar tu progreso y preferencias. No utilizamos cookies de seguimiento ni de publicidad.</p>
+      <p style="margin-top:1.2rem;font-size:.82rem;color:#888;">Al utilizar Le Pupu Le Guagua, aceptas estos términos. Para cualquier consulta: info@sci-mexico.net</p>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ SCREEN: HOME — HUB DE NAVEGACIÓN ═══════ -->
